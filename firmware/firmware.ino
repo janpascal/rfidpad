@@ -1,28 +1,26 @@
 /**
-   IotWebConf03CustomParameters.ino -- IotWebConf is an ESP8266/ESP32
-     non blocking WiFi/AP web configuration library for Arduino.
-     https://github.com/prampec/IotWebConf
+   firmware.ino -- part of rfidpad. 
 
-   Copyright (C) 2018 Balazs Kelemen <prampec+arduino@gmail.com>
+   rfidpad is an ESP32 based device to enable and disable a Home 
+   Assistant alarm system using RFID tags
 
-   This software may be modified and distributed under the terms
-   of the MIT license.  See the LICENSE file for details.
-*/
+   See https://github.com/janpascal/rfidpad for a hardware description
+   and Home Assistant integration.
 
-/**
-   Example: Custom parameters
-   Description:
-     In this example it is shown how to attach your custom parameters
-     to the config portal. Your parameters will be maintained by
-     IotWebConf. This means, they will be loaded from/saved to EEPROM,
-     and will appear in the config portal.
-     Note the configSaved and formValidator callbacks!
-     (See previous examples for more details!)
+   Copyright (C) 2020 Jan-Pascal van Best <janpascal@vanbest.org>
 
-   Hardware setup for this example:
-     - An LED is attached to LED_BUILTIN pin with setup On=LOW.
-     - [Optional] A push button is attached to pin D2, the other leg of the
-       button should be attached to GND.
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 #include <WiFiClientSecure.h>
