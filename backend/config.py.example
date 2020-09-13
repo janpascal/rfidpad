@@ -1,0 +1,26 @@
+# Host name of the mqtt server
+MQTT_SERVER="mqtt.example.com"
+
+# Port number of the mqtt server
+MQTT_PORT=1883
+
+# MQTT user name
+MQTT_USER="rfidpad"
+
+# Password of the MQTT account
+MQTT_PASSWORD=""
+
+# MQTT topic in which the rfidpad posts its actions
+MQTT_ACTION_TOPIC="rfidpad/action"
+
+# MQTT topic in which to change the alarm system status
+MQTT_STATUS_TOPIC="rfidpad/status"
+
+# Hexadecimal IDs of tags that are allowed to arm or
+# disarm the alarm system
+ALLOWED_TAGS = [
+    "01020304",
+    "aabbccdd",
+    "deadbeef"
+]
+
