@@ -42,10 +42,6 @@
 #define PIN_SDA (32)
 #define PIN_SCL (33)
 
-// #define BUTTON_PIN GPIO_PIN_33
-// #define BUTTON_PIN_BITMASK 0x200000000 // 2^33 in hex
-// #define BUTTON_PIN_BITMASK 0x000008000 // 2^15 in hex
-
 #define PIN_DISARM_BUTTON 27
 #define PIN_ARM_HOME_BUTTON 34
 #define PIN_ARM_AWAY_BUTTON 35
@@ -179,9 +175,9 @@ void setup()
   requested_state = get_requested_state();
 
   //pinMode(VBAT_PIN, INPUT);
-  pinMode(LED_RED_PIN, OUTPUT);
-  pinMode(LED_GREEN_PIN, OUTPUT);
-  pinMode(LED_BLUE_PIN, OUTPUT);
+  //pinMode(LED_RED_PIN, OUTPUT);
+  //pinMode(LED_GREEN_PIN, OUTPUT);
+  //pinMode(LED_BLUE_PIN, OUTPUT);
 
   if (PIN_DISARMED_LED > 0) pinMode(PIN_DISARMED_LED, OUTPUT);
   if (PIN_ARMED_HOME_LED > 0) pinMode(PIN_ARMED_HOME_LED, OUTPUT);
@@ -342,25 +338,6 @@ void update_requested_state_from_buttons()
   if (digitalRead(PIN_ARM_HOME_BUTTON) == HIGH) requested_state = requested_state_arm_home_button;
   if (digitalRead(PIN_ARM_AWAY_BUTTON) == HIGH) requested_state = requested_state_arm_away_button;
 }
-
-void rotate_led()
-{
-  if (current_led == 0) {
-    digitalWrite(LED_RED_PIN, HIGH);
-    digitalWrite(LED_GREEN_PIN, LOW);
-    digitalWrite(LED_BLUE_PIN, LOW);
-  } else if (current_led == 1) {
-    digitalWrite(LED_RED_PIN, LOW);
-    digitalWrite(LED_GREEN_PIN, HIGH);
-    digitalWrite(LED_BLUE_PIN, LOW);
-  } else if (current_led == 2) {
-    digitalWrite(LED_RED_PIN, LOW);
-    digitalWrite(LED_GREEN_PIN, LOW);
-    digitalWrite(LED_BLUE_PIN, HIGH);
-  }
-  current_led = (current_led + 1) % 3;
-}
-
 
 int lastBlinkMillis = 0;
 int lastBlinkState = 0;
