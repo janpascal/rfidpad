@@ -628,7 +628,7 @@ boolean formValidator()
 
   String port = server.arg(mqttServerPortParam.getId());
   for (int i = 0; i < port.length(); ++i) {
-    if (port[i] < '0' || port[i] > '0') {
+    if (port[i] < '0' || port[i] > '9') {
       mqttServerPortParam.errorMessage = "MQTT server port should be a number";
       valid = false;
     }
