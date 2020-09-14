@@ -54,14 +54,14 @@
 #define PIN_ARMED_HOME_LED 18
 #define PIN_ARMED_AWAY_LED 17
 
-enum wakeup_reason_t {
-  wakeup_reason_unknown,
-  wakeup_reason_disarm_button,
-  wakeup_reason_arm_home_button,
-  wakeup_reason_arm_away_button
+enum requested_state_t {
+  requested_state_unknown,
+  requested_state_disarm_button,
+  requested_state_arm_home_button,
+  requested_state_arm_away_button
 };
 
-static const char *wakeup_reason_actions[] = { "SCAN", "DISARM", "ARM_HOME", "ARM_AWAY" };
+static const char *requested_state_actions[] = { "SCAN", "DISARM", "ARM_HOME", "ARM_AWAY" };
 
 enum state_t {
   state_unknown,
@@ -163,10 +163,10 @@ unsigned long lastMqttConnectionAttempt = 0;
 static int current_led = 0;
 unsigned long lastMsg = 0;
 unsigned long mqttLastMsgTimestamp = 0;
-char mqtt_status_channel[] = "test/status";
-char mqtt_action_channel[] = "test/action";
+char mqtt_status_channel[] = "rfidpad/status";
+char mqtt_action_channel[] = "rfidpad/action";
 
-wakeup_reason_t wakeup_reason = wakeup_reason_unknown;
+requested_state_t requested_state = requested_state_unknown;
 state_t current_state = state_unknown;
 int last_state_change = 0;
 
@@ -176,7 +176,7 @@ void setup()
   Serial.println();
   Serial.println("Starting up...");
 
-  wakeup_reason = get_wakeup_reason();
+  requested_state = get_requested_state();
 
   //pinMode(VBAT_PIN, INPUT);
   pinMode(LED_RED_PIN, OUTPUT);
@@ -301,12 +301,11 @@ void wifiConnected()
   needMqttConnect = true;
 }
 
-wakeup_reason_t get_wakeup_reason()
+requested_state_t get_requested_state()
 {
   uint64_t bitmask;
 
-  esp_sleep_wakeup_cause_t wakeup_reason;
-  wakeup_reason = esp_sleep_get_wakeup_cause();
+  esp_sleep_wakeup_cause_t wakeup_reason = esp_sleep_get_wakeup_cause();
 
   switch (wakeup_reason) {
     case ESP_SLEEP_WAKEUP_EXT0 : 
@@ -318,14 +317,14 @@ wakeup_reason_t get_wakeup_reason()
         Serial.printf("Wake up trigger bitmask: %016llx\n", bitmask);
       
         if (bitmask & (1ULL << PIN_DISARM_BUTTON)) {
-          return wakeup_reason_disarm_button;
+          return requested_state_disarm_button;
         } else if (bitmask & (1ULL << PIN_ARM_HOME_BUTTON)) {
-          return wakeup_reason_arm_home_button;
+          return requested_state_arm_home_button;
         } else if (bitmask & (1ULL << PIN_ARM_AWAY_BUTTON)) {
-          return wakeup_reason_arm_away_button;
+          return requested_state_arm_away_button;
         } else {
           Serial.println("Woken up by unknown pin");
-          return wakeup_reason_unknown;
+          return requested_state_unknown;
         }
         break;
     case ESP_SLEEP_WAKEUP_TIMER : Serial.println("Wakeup caused by timer"); break;
@@ -334,14 +333,14 @@ wakeup_reason_t get_wakeup_reason()
     default : Serial.printf("Wakeup was not caused by deep sleep: %d\n", wakeup_reason); break;
   }
 
-  return wakeup_reason_unknown;
+  return requested_state_unknown;
 }
 
-void update_wakeup_reason_from_buttons()
+void update_requested_state_from_buttons()
 {
-  if (digitalRead(PIN_DISARM_BUTTON) == HIGH) wakeup_reason = wakeup_reason_disarm_button;
-  if (digitalRead(PIN_ARM_HOME_BUTTON) == HIGH) wakeup_reason = wakeup_reason_arm_home_button;
-  if (digitalRead(PIN_ARM_AWAY_BUTTON) == HIGH) wakeup_reason = wakeup_reason_arm_away_button;
+  if (digitalRead(PIN_DISARM_BUTTON) == HIGH) requested_state = requested_state_disarm_button;
+  if (digitalRead(PIN_ARM_HOME_BUTTON) == HIGH) requested_state = requested_state_arm_home_button;
+  if (digitalRead(PIN_ARM_AWAY_BUTTON) == HIGH) requested_state = requested_state_arm_away_button;
 }
 
 void rotate_led()
@@ -463,7 +462,7 @@ void loop()
   ping_mqtt();
 
   handle_nfc();
-  update_wakeup_reason_from_buttons();
+  update_requested_state_from_buttons();
   update_state_leds(current_state);
 
   if (millis() - last_state_change > 5000) {
@@ -524,7 +523,7 @@ void handle_nfc()
     int length = 0;
     char msg[256];
 
-    length += snprintf(msg + length, 256 - length, wakeup_reason_actions[wakeup_reason]);
+    length += snprintf(msg + length, 256 - length, requested_state_actions[requested_state]);
     length += snprintf(msg + length, 256 - length, " ");
     for (uint8_t i = 0; i < uidLength; i++)
     {
@@ -534,9 +533,9 @@ void handle_nfc()
     
     mqttClient.publish(mqtt_action_channel, msg);
 
-    if (wakeup_reason == wakeup_reason_disarm_button) set_state(state_disarmed_pending);
-    if (wakeup_reason == wakeup_reason_arm_home_button) set_state(state_armed_home_pending);
-    if (wakeup_reason == wakeup_reason_arm_away_button) set_state(state_armed_away_pending);
+    if (requested_state == requested_state_disarm_button) set_state(state_disarmed_pending);
+    if (requested_state == requested_state_arm_home_button) set_state(state_armed_home_pending);
+    if (requested_state == requested_state_arm_away_button) set_state(state_armed_away_pending);
   }
   wire.flush();
 }
