@@ -165,6 +165,7 @@ char mqtt_action_channel[] = "rfidpad/action";
 requested_state_t requested_state = requested_state_unknown;
 state_t current_state = state_unknown;
 int last_state_change = 0;
+char mqtt_message_to_send[255] = "";
 
 void setup()
 {
@@ -442,9 +443,18 @@ void loop()
   update_requested_state_from_buttons();
   update_state_leds(current_state);
 
+  if (mqtt_message_to_send[0] != 0 && mqttClient.connected())
+  {    
+    Serial.printf("Publishing %s to %s\n", mqtt_message_to_send, mqtt_action_channel); 
+    mqttClient.publish(mqtt_action_channel, mqtt_message_to_send);
+    mqtt_message_to_send[0] = 0;
+  }
+
   if (millis() - last_state_change > 5000) {
     enter_deep_sleep();
   }
+
+  delay(50);
 
   // TODO: sleep when nothing happens
   //    // Wait 1 second before continuing
@@ -506,9 +516,8 @@ void handle_nfc()
     {
       length += snprintf(msg + length, 256 - length, "%02x", uid[i]);
     }
-    Serial.printf("Publishing %s to %s\n", msg, mqtt_action_channel);
-    
-    mqttClient.publish(mqtt_action_channel, msg);
+
+    strncpy(mqtt_message_to_send, msg, sizeof(mqtt_message_to_send));
 
     if (requested_state == requested_state_disarm_button) set_state(state_disarmed_pending);
     if (requested_state == requested_state_arm_home_button) set_state(state_armed_home_pending);
