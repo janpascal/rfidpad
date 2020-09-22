@@ -19,6 +19,16 @@ download the executable.-->
 			<DATE></DATE>
 			<GRID spacing='50.00000' snap='1'/>
 		</DETAILS>
+		<FONT id='0'>
+			<HEIGHT>-13</HEIGHT>
+			<WIDTH>6</WIDTH>
+			<WEIGHT>400</WEIGHT>
+			<ITALIC>0</ITALIC>
+			<UNDERLINE>0</UNDERLINE>
+			<STRIKEOUT>0</STRIKEOUT>
+			<CHARSET>0</CHARSET>
+			<FACENAME>Arial</FACENAME>
+		</FONT>
 		<FONT id='1'>
 			<HEIGHT>-10</HEIGHT>
 			<WIDTH>0</WIDTH>
@@ -714,6 +724,7 @@ download the executable.-->
 				<POS>0.00000,0.00000</POS>
 			</FIELD>
 			<REF_POINT power='0' part='0' pos='23.00000,28.00000'/>
+			<REF_POINT power='1' part='0' pos='23.00000,28.00000'/>
 			<TinyCAD>
 				<PIN pos='21.00000,28.00000' which='0' elec='4' direction='0' part='0' number='3' show='2' length='15' number_pos='0' centre_name='0'>SOURCE</PIN>
 				<PIN pos='21.00000,16.00000' which='0' elec='4' direction='1' part='0' number='2' show='2' length='15' number_pos='0' centre_name='0'>DRAIN</PIN>
@@ -951,23 +962,22 @@ download the executable.-->
 		<WIRE a='229.00000,89.00000' b='229.00000,74.00000'/>
 		<WIRE a='238.00000,74.00000' b='229.00000,74.00000'/>
 		<TEXT pos='258.00000,94.00000' direction='3' font='3' color='000000'>Elechouse PN532</TEXT>
-		<WIRE a='199.00000,59.00000' b='199.00000,74.00000'/>
-		<SYMBOL id='9' pos='184.00000,48.00000' part='0' rotate='0' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+		<WIRE a='199.00000,63.00000' b='199.00000,74.00000'/>
+		<SYMBOL id='9' pos='171.00000,49.00000' part='0' rotate='0' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
 			<FIELD type='0' description='Ref' value='10k' show='1' pos='1.00000,-5.60000'/>
 			<FIELD type='0' description='Name' value='R10' show='1' pos='1.00000,-8.00000'/>
 		</SYMBOL>
-		<WIRE a='193.00000,55.00000' b='182.00000,55.00000'/>
-		<WIRE a='199.00000,47.00000' b='199.00000,30.00000'/>
-		<SYMBOL id='11' pos='176.00000,57.00000' part='0' rotate='2' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+		<WIRE a='193.00000,55.00000' b='187.00000,55.00000'/>
+		<WIRE a='199.00000,51.00000' b='199.00000,30.00000'/>
+		<SYMBOL id='11' pos='189.00000,57.00000' part='0' rotate='2' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
 			<FIELD type='0' description='Ref' value='100' show='1' pos='-9.00000,2.00000'/>
 			<FIELD type='0' description='Name' value='R9' show='1' pos='-9.00000,-4.00000'/>
 		</SYMBOL>
-		<WIRE a='182.00000,55.00000' b='174.00000,55.00000'/>
 		<WIRE a='217.00000,76.00000' b='217.00000,74.00000'/>
 		<WIRE a='229.00000,74.00000' b='217.00000,74.00000'/>
 		<WIRE a='217.00000,84.00000' b='217.00000,87.00000'/>
 		<WIRE a='239.00000,87.00000' b='217.00000,87.00000'/>
-		<SYMBOL id='12' pos='201.00000,59.00000' part='0' rotate='0' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+		<SYMBOL id='12' pos='201.00000,63.00000' part='0' rotate='1' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
 			<FIELD type='1' description='Ref' value='NDP6020P ' show='1' pos='1.00000,-7.60000'/>
 			<FIELD type='0' description='Name' value='FET1' show='1' pos='1.00000,-10.00000'/>
 			<FIELD type='1' description='Package' value='' show='0' pos='1.00000,-5.20000'/>
@@ -985,17 +995,10 @@ download the executable.-->
 			<FIELD type='1' description='Mouser Part' value='..' show='0' pos='1.00000,23.60000'/>
 			<FIELD type='1' description='Cost' value='..' show='0' pos='1.00000,26.00000'/>
 		</SYMBOL>
-		<WIRE a='182.00000,55.00000' b='182.00000,46.00000'/>
-		<WIRE a='194.00000,55.00000' b='193.00000,55.00000'/>
-		<WIRE a='182.00000,38.00000' b='182.00000,30.00000'/>
-		<WIRE a='199.00000,30.00000' b='182.00000,30.00000'/>
-		<JUNCTION pos='182.00000,55.00000'/>
-		<JUNCTION pos='193.00000,55.00000'/>
+		<WIRE a='169.00000,30.00000' b='155.00000,30.00000'/>
 		<JUNCTION pos='217.00000,74.00000'/>
 		<JUNCTION pos='229.00000,74.00000'/>
-		<JUNCTION pos='182.00000,30.00000'/>
-		<WIRE a='182.00000,30.00000' b='155.00000,30.00000'/>
-		<WIRE a='166.00000,55.00000' b='155.00000,55.00000'/>
+		<WIRE a='169.00000,55.00000' b='155.00000,55.00000'/>
 		<JUNCTION pos='217.00000,87.00000'/>
 		<WIRE a='217.00000,87.00000' b='153.00000,87.00000'/>
 		<JUNCTION pos='229.00000,101.00000'/>
@@ -1006,5 +1009,14 @@ download the executable.-->
 		<POWER pos='155.00000,55.00000' which='0' direction='2'>IO-35</POWER>
 		<POWER pos='153.00000,87.00000' which='0' direction='2'>IO-32</POWER>
 		<POWER pos='153.00000,101.00000' which='0' direction='2'>IO-33</POWER>
+		<TEXT pos='197.00000,51.00000' direction='3' font='0' color='000000'>S</TEXT>
+		<TEXT pos='191.00000,58.00000' direction='3' font='0' color='000000'>G</TEXT>
+		<TEXT pos='200.00000,64.00000' direction='3' font='0' color='000000'>D</TEXT>
+		<WIRE a='169.00000,39.00000' b='169.00000,30.00000'/>
+		<JUNCTION pos='169.00000,30.00000'/>
+		<WIRE a='199.00000,30.00000' b='169.00000,30.00000'/>
+		<WIRE a='169.00000,47.00000' b='169.00000,55.00000'/>
+		<JUNCTION pos='169.00000,55.00000'/>
+		<WIRE a='179.00000,55.00000' b='169.00000,55.00000'/>
 	</TinyCAD>
 </TinyCADSheets>
