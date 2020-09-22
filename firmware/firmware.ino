@@ -34,6 +34,10 @@
 #include <PN532.h>
 
 
+#define DBG_OUTPUT_PORT Serial
+#include <SPIFFS.h>
+
+
 #define LED_RED_PIN 16
 #define LED_GREEN_PIN 17
 #define LED_BLUE_PIN 18
@@ -50,14 +54,28 @@
 #define PIN_ARMED_HOME_LED 18
 #define PIN_ARMED_AWAY_LED 17
 
+// -- When CONFIG_PIN is pulled to ground on startup, the Thing will use the initial
+//      password to buld an AP. (E.g. in case of lost password)
+//      -1 means no config pin
+#define CONFIG_PIN -1
+
+// -- Status indicator pin.
+//      First it will light up (kept LOW), on Wifi connection it will blink,
+//      when connected to the Wifi it will turn off (kept HIGH).
+#define STATUS_PIN -1
+
+#define NORMAL_WAKE_TIME 5000
+#define CONFIG_WAKE_TIME 60000
+
 enum requested_state_t {
   requested_state_unknown,
   requested_state_disarm_button,
   requested_state_arm_home_button,
-  requested_state_arm_away_button
+  requested_state_arm_away_button,
+  requested_state_config
 };
 
-static const char *requested_state_actions[] = { "SCAN", "DISARM", "ARM_HOME", "ARM_AWAY" };
+static const char *requested_state_actions[] = { "SCAN", "DISARM", "ARM_HOME", "ARM_AWAY", "SCAN" };
 
 enum state_t {
   state_unknown,
@@ -66,7 +84,8 @@ enum state_t {
   state_armed_home,
   state_armed_home_pending,
   state_armed_away,
-  state_armed_away_pending
+  state_armed_away_pending,
+  state_config                // CA certificate incomplete or double buttons pressed
 };
 
 // Calculated in enter_deep_sleep()
@@ -80,50 +99,15 @@ const char thingName[] = "keypad";
 // -- Initial password to connect to the Thing, when it creates an own Access Point.
 const char wifiInitialApPassword[] = "pad323232";
 
-
-const char* defaultRootCa = \
-                            "-----BEGIN CERTIFICATE-----\n" \
-                            "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\n" \
-                            "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\n" \
-                            "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\n" \
-                            "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\n" \
-                            "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\n" \
-                            "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\n" \
-                            "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\n" \
-                            "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\n" \
-                            "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\n" \
-                            "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\n" \
-                            "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\n" \
-                            "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\n" \
-                            "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\n" \
-                            "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\n" \
-                            "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\n" \
-                            "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\n" \
-                            "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\n" \
-                            "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\n" \
-                            "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\n" \
-                            "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\n" \
-                            "XXX=\n" \
-                            "-----END CERTIFICATE-----\n";
+const char* caFilename = "/ca.crt";
 
 #define STRING_LEN 128
 #define NUMBER_LEN 32
 
 // -- Configuration specific key. The value should be modified if config structure was changed.
-#define CONFIG_VERSION "key1"
-
-// -- When CONFIG_PIN is pulled to ground on startup, the Thing will use the initial
-//      password to buld an AP. (E.g. in case of lost password)
-//      -1 means no config pin
-#define CONFIG_PIN -1
-
-// -- Status indicator pin.
-//      First it will light up (kept LOW), on Wifi connection it will blink,
-//      when connected to the Wifi it will turn off (kept HIGH).
-#define STATUS_PIN -1
+#define CONFIG_VERSION "key8"
 
 #define STRING_LEN 128
-#define CACERT_LEN 2000
 #define PORT_LEN 5
 
 // -- Callback method declarations.
@@ -134,6 +118,7 @@ DNSServer dnsServer;
 WiFiClientSecure net;
 WebServer server(80);
 PubSubClient mqttClient(net);
+File fsUploadFile; //holds the current upload
 
 TwoWire wire(0);
 PN532_I2C pn532_i2c(wire);
@@ -141,16 +126,14 @@ PN532 pn532(pn532_i2c);
 
 char mqttServerValue[STRING_LEN];
 char mqttServerPortValue[PORT_LEN];
-char mqttServerCaCertValue[CACERT_LEN];
 char mqttUserNameValue[STRING_LEN];
 char mqttUserPasswordValue[STRING_LEN];
 
 IotWebConf iotWebConf(thingName, &dnsServer, &server, wifiInitialApPassword, CONFIG_VERSION);
-IotWebConfParameter mqttServerParam = IotWebConfParameter("MQTT server", "mqttServer", mqttServerValue, STRING_LEN, "text", NULL, "mqtt.example.com");
+IotWebConfParameter mqttServerParam = IotWebConfParameter("MQTT server", "mqttServer", mqttServerValue, STRING_LEN, "text", NULL, "bree.vanbest.eu");
 IotWebConfParameter mqttServerPortParam = IotWebConfParameter("MQTT port", "mqttPort", mqttServerPortValue, PORT_LEN, "text", NULL, "1883"); // , "1883 for MQTT, 8883 for MQTTS");
-//IotWebConfParameter mqttServerCaCertParam = IotWebConfParameter("MQTT CA Certificate", "mqttCaCert", mqttServerCaCertValue, CACERT_LEN, "text", NULL, defaultRootCa); // , "CA certificate for MQTT server. Leave empty not to validate certficate");
-IotWebConfParameter mqttUserNameParam = IotWebConfParameter("MQTT user", "mqttUser", mqttUserNameValue, STRING_LEN, "text", NULL, "rfidpad");
-IotWebConfParameter mqttUserPasswordParam = IotWebConfParameter("MQTT password", "mqttPass", mqttUserPasswordValue, STRING_LEN, "password", NULL, "SECRETSECRET");
+IotWebConfParameter mqttUserNameParam = IotWebConfParameter("MQTT user", "mqttUser", mqttUserNameValue, STRING_LEN, "text", NULL, "keypad");
+IotWebConfParameter mqttUserPasswordParam = IotWebConfParameter("MQTT password", "mqttPass", mqttUserPasswordValue, STRING_LEN, "password", NULL, "aeSheeciingeib6G");
 // -- We can add a legend to the separator
 //IotWebConfSeparator separator2 = IotWebConfSeparator("Calibration factor");
 
@@ -174,6 +157,7 @@ void setup()
   Serial.println("Starting up...");
 
   requested_state = get_requested_state();
+  if (requested_state = requested_state_config) current_state = state_config;
 
   //pinMode(VBAT_PIN, INPUT);
   //pinMode(LED_RED_PIN, OUTPUT);
@@ -187,6 +171,9 @@ void setup()
   pinMode(PIN_DISARM_BUTTON, INPUT);
   pinMode(PIN_ARM_HOME_BUTTON, INPUT);
   pinMode(PIN_ARM_AWAY_BUTTON, INPUT);
+  
+  // if (FORMAT_FILESYSTEM) SPIFFS.format();
+  SPIFFS.begin();                           // Start the SPI Flash Files System
 
   iotWebConf.setStatusPin(STATUS_PIN);
   iotWebConf.setConfigPin(CONFIG_PIN);
@@ -212,14 +199,28 @@ void setup()
     iotWebConf.resetWifiAuthInfo();
     strncpy(mqttServerValue, mqttServerParam.defaultValue, STRING_LEN);
     strncpy(mqttServerPortValue, mqttServerPortParam.defaultValue, PORT_LEN);
-    //strncpy(mqttServerCaCertValue, mqttServerCaCertParam.defaultValue, mqttServerParam.getLength());
     strncpy(mqttUserNameValue, mqttUserNameParam.defaultValue, STRING_LEN);
     strncpy(mqttUserPasswordValue, mqttUserPasswordParam.defaultValue, STRING_LEN);
   }
 
-  if (mqttServerCaCertValue[0] != 0) {
-    Serial.println("Setting ca certificate to connection to MQTT server");
-    net.setCACert(defaultRootCa);
+  Serial.println("Setting ca certificate to connection to MQTT server");
+  if (!SPIFFS.exists(caFilename)) {
+    Serial.printf("CA file %s does not exist!\n", caFilename);
+  }
+  File file = SPIFFS.open(caFilename, "r");
+
+  if(!file) {
+    Serial.printf("Error opening the CA file %s\n.", caFilename);
+  } else {
+    String ca_cert = file.readString();
+    Serial.printf("CA Root certificate: %s\n", ca_cert.c_str());
+    char *tmp;  
+    tmp = (char *)malloc(sizeof(char) * (ca_cert.length()+1));
+    strcpy(tmp, ca_cert.c_str());
+      
+    net.setCACert(tmp);
+    file.close();
+    // free(tmp);      
   }
 
   IotWebConfParameter* ap_passwd_param = iotWebConf.getApPasswordParameter();
@@ -235,6 +236,10 @@ void setup()
   // -- Set up required URL handlers on the web server.
   server.on("/", handleRoot);
   server.on("/config", [] { iotWebConf.handleConfig(); });
+  server.on("/upload_cert", HTTP_POST,                       // if the client posts to the upload page
+    [](){ server.send(200); },                          // Send status 200 (OK) to tell the client we are ready to receive
+    handleCertUpload                                    // Receive and save the file
+  );
   server.onNotFound([]() {
     iotWebConf.handleNotFound();
   });
@@ -301,7 +306,9 @@ void wifiConnected()
 requested_state_t get_requested_state()
 {
   uint64_t bitmask;
-
+  requested_state_t response = requested_state_unknown;
+  int count = 0;
+        
   esp_sleep_wakeup_cause_t wakeup_reason = esp_sleep_get_wakeup_cause();
 
   switch (wakeup_reason) {
@@ -312,17 +319,28 @@ requested_state_t get_requested_state()
         Serial.println("Wakeup caused by external signal using RTC_CNTL"); 
         bitmask = esp_sleep_get_ext1_wakeup_status();
         Serial.printf("Wake up trigger bitmask: %016llx\n", bitmask);
-      
+        
         if (bitmask & (1ULL << PIN_DISARM_BUTTON)) {
-          return requested_state_disarm_button;
-        } else if (bitmask & (1ULL << PIN_ARM_HOME_BUTTON)) {
-          return requested_state_arm_home_button;
-        } else if (bitmask & (1ULL << PIN_ARM_AWAY_BUTTON)) {
-          return requested_state_arm_away_button;
-        } else {
+          response = requested_state_disarm_button;
+          count++;
+        } 
+        if (bitmask & (1ULL << PIN_ARM_HOME_BUTTON)) {
+          response = requested_state_arm_home_button;
+          count++;
+        } 
+        if (bitmask & (1ULL << PIN_ARM_AWAY_BUTTON)) {
+            response = requested_state_arm_away_button;
+            count++;
+        } 
+        if (count == 0) {
           Serial.println("Woken up by unknown pin");
           return requested_state_unknown;
         }
+        if (count == 1) {
+          return response;
+        }
+        // Multiple buttons pressed on startup
+        return requested_state_config;
         break;
     case ESP_SLEEP_WAKEUP_TIMER : Serial.println("Wakeup caused by timer"); break;
     case ESP_SLEEP_WAKEUP_TOUCHPAD : Serial.println("Wakeup caused by touchpad"); break;
@@ -342,6 +360,7 @@ void update_requested_state_from_buttons()
 
 int lastBlinkMillis = 0;
 int lastBlinkState = 0;
+int lastBlinkLed = 0;
 
 void update_state_leds(state_t state, boolean force=false)
 {
@@ -353,6 +372,7 @@ void update_state_leds(state_t state, boolean force=false)
   lastBlinkMillis = now;
 
   lastBlinkState = 1 - lastBlinkState;
+  lastBlinkLed = (lastBlinkLed + 1) % 3;
   
   int led_disarmed = 0;
   int led_armed_home = 0;
@@ -361,6 +381,11 @@ void update_state_leds(state_t state, boolean force=false)
   switch(state) {
     case state_unknown:
       if (lastBlinkState) led_disarmed = led_armed_home = led_armed_away = 1;
+      break;
+    case state_config:
+      led_disarmed = (lastBlinkLed == 0);
+      led_armed_home = (lastBlinkLed == 1);
+      led_armed_away = (lastBlinkLed == 2);
       break;
     case state_disarmed:
       led_disarmed = 1;
@@ -450,19 +475,16 @@ void loop()
     mqtt_message_to_send[0] = 0;
   }
 
-  if (millis() - last_state_change > 5000) {
+  if (current_state != state_config && millis() - last_state_change > NORMAL_WAKE_TIME) {
+    Serial.printf("Been awake without action for more than %s ms, going to deep sleep...\n", millis() - last_state_change);
+    enter_deep_sleep();
+  }
+  if (current_state == state_config && millis() - last_state_change > CONFIG_WAKE_TIME) {
+    Serial.printf("In Config mode, but awake without action for more than %s ms, going to deep sleep...\n", millis() - last_state_change);
     enter_deep_sleep();
   }
 
   delay(50);
-
-  // TODO: sleep when nothing happens
-  //    // Wait 1 second before continuing
-  //  delay(1000);
-  //  enter_deep_sleep();
-
-
-
 }
 
 void enter_deep_sleep()
@@ -585,21 +607,40 @@ void handleRoot()
   //float battery_percentage = get_battery_percentage();
   String s = "<!DOCTYPE html><html lang=\"en\"><head><meta name=\"viewport\" content=\"width=device-width, initial-scale=1, user-scalable=no\"/>";
   s += "<title>IotWebConf based keypad</title></head><body><p>Hello world!</p>";
-  //  s += "<ul>";
-  //  s += "<li>String param value: ";
-  //  s += stringParamValue;
-  //  s += "<li>Int param value: ";
-  //  s += atoi(intParamValue);
-  //  s += "<li>Float param value: ";
-  //  s += atof(floatParamValue);
-  //  s += "</ul>";
   s += "<p>Go to <a href='config'>configure page</a> to change values.</p>";
+  s += "<form action=\"upload_cert\" method=\"post\" enctype=\"multipart/form-data\">";
+  s += "  <input type=\"file\" name=\"name\">";
+  s += "  <input class=\"button\" type=\"submit\" value=\"Upload\">";
+  s += "</form>";
   //  s += "</p>Battery level: ";
   //  s += battery_percentage;
   //  s += "%</p>";
+  
   s += "</body></html>\n";
 
   server.send(200, "text/html", s);
+}
+
+void handleCertUpload(){ // upload the MQTT CA Certificate to the SPIFFS
+  HTTPUpload& upload = server.upload();
+  if(upload.status == UPLOAD_FILE_START){
+    String filename = caFilename;
+    Serial.print("handleCertUpload Name: "); Serial.println(filename);
+    fsUploadFile = SPIFFS.open(filename, "w");            // Open the file for writing in SPIFFS (create if it doesn't exist)
+    filename = String();
+  } else if(upload.status == UPLOAD_FILE_WRITE){
+    if(fsUploadFile)
+      fsUploadFile.write(upload.buf, upload.currentSize); // Write the received bytes to the file
+  } else if(upload.status == UPLOAD_FILE_END){
+    if(fsUploadFile) {                                    // If the file was successfully created
+      fsUploadFile.close();                               // Close the file again
+      Serial.print("handleCertUpload Size: "); Serial.println(upload.totalSize);
+      server.sendHeader("Location","/");      // Redirect the client to the index
+      server.send(303);
+    } else {
+      server.send(500, "text/plain", "500: couldn't create ca certificate file");
+    }
+  }
 }
 
 void configSaved()
