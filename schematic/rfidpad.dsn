@@ -19,16 +19,6 @@ download the executable.-->
 			<DATE></DATE>
 			<GRID spacing='50.00000' snap='1'/>
 		</DETAILS>
-		<FONT id='0'>
-			<HEIGHT>-13</HEIGHT>
-			<WIDTH>6</WIDTH>
-			<WEIGHT>400</WEIGHT>
-			<ITALIC>0</ITALIC>
-			<UNDERLINE>0</UNDERLINE>
-			<STRIKEOUT>0</STRIKEOUT>
-			<CHARSET>0</CHARSET>
-			<FACENAME>Arial</FACENAME>
-		</FONT>
 		<FONT id='1'>
 			<HEIGHT>-10</HEIGHT>
 			<WIDTH>0</WIDTH>
@@ -49,27 +39,27 @@ download the executable.-->
 			<CHARSET>0</CHARSET>
 			<FACENAME>Arial</FACENAME>
 		</FONT>
+		<FONT id='4'>
+			<HEIGHT>-13</HEIGHT>
+			<WIDTH>6</WIDTH>
+			<WEIGHT>400</WEIGHT>
+			<ITALIC>0</ITALIC>
+			<UNDERLINE>0</UNDERLINE>
+			<STRIKEOUT>0</STRIKEOUT>
+			<CHARSET>0</CHARSET>
+			<FACENAME>Arial</FACENAME>
+		</FONT>
 		<STYLE id='0'>
 			<STYLE>0</STYLE>
 			<COLOR>000000</COLOR>
 			<THICKNESS>1</THICKNESS>
 		</STYLE>
-		<STYLE id='4'>
-			<STYLE>0</STYLE>
-			<COLOR>000000</COLOR>
-			<THICKNESS>1</THICKNESS>
-		</STYLE>
-		<STYLE id='5'>
-			<STYLE>0</STYLE>
-			<COLOR>000000</COLOR>
-			<THICKNESS>1</THICKNESS>
-		</STYLE>
-		<STYLE id='6'>
-			<STYLE>0</STYLE>
-			<COLOR>000000</COLOR>
-			<THICKNESS>1</THICKNESS>
-		</STYLE>
 		<STYLE id='7'>
+			<STYLE>0</STYLE>
+			<COLOR>000000</COLOR>
+			<THICKNESS>1</THICKNESS>
+		</STYLE>
+		<STYLE id='8'>
 			<STYLE>0</STYLE>
 			<COLOR>000000</COLOR>
 			<THICKNESS>2</THICKNESS>
@@ -87,6 +77,195 @@ download the executable.-->
 			<INDEX>0</INDEX>
 			<COLOR>000000</COLOR>
 		</FILL>
+		<IMAGE id='1' type='PNG'>
+			<UUENCODE size='8301'>
+MB5!.1PT*&amp;@H    -24A$4@   &gt;@   %1&quot; ,   &quot;(2\Z#   # %!,5$4   #_
+M___P\/#O[^^ @(!_?W^/CX]P&lt;&#039;#@X.#?W]_0T-#/S\_ P,&quot;_O[^PL+&quot;OKZ^@
+MH*&quot;?GY^0D)!/3T\/#P]O;V]@8&amp;! 0$ _/S]?7U]04% P,# O+R\@(&quot; ?&#039;Q\0
+M$!                                                          
+M                                                            
+M                                                            
+M                                                            
+M                                                            
+M                                                            
+M                                                            
+M                                                            
+M                                                            
+M                                                            
+M                                                            
+M                                                            
+M                                                            
+M                                                            
+M                                                          !F
+MI$$=    #W1%6&#039;14:71L90!-;VYA($QI&lt;V&amp;UY#JY    %W1%6&#039;1!=71H;W( 
+M3&amp;5O;F%R9&amp;\@1&amp;%6:6YC:;J4WJ     @&gt;E18=$1E&lt;V-R:7!T:6]N   (F;/)
+MR&lt;]+5RA)K2BQ P 8)000!T7%20  &#039;+Y)1$%4&gt;)SMG&gt;&gt;&quot;HR 41EVP]YZHB;[_
+M6RYHF@5LV :^/SMC1M=XI-V&amp;]$^(&quot;TE&#039;WX#0/A*@.9$ S8D$:$XD0&#039;,B 9H3
+M&quot;=&quot;&lt;2(#F1 (T)Q*@.9$ S8D$:$XD0&#039;,B 9H3&quot;=&quot;&lt;2(#F1 (T)Q*@.9$ S8D$
+M:$XD0&#039;,B 9H3&quot;=&quot;&lt;2(#F1 (T)Q*@.9$ S8D$:$XD0&#039;,B 9H3&quot;=&quot;&lt;2(#F1 (T
+M)Q*@.9$ S8D$:$XD0&#039;,B 9H3&quot;=&quot;&lt;2(#F1 (T)Q*@.9$ S8D$:$XD0&#039;,B 7J]
+MH&amp;&#039; H^]A5%R#!H:EK[^(Z0:!9P$&amp;][.E&gt; 9M.(&#039;JV2M16VXH(ZGNR4GS&quot;QH8
+M 28D^]:*?A=8JOR2N^8ZVXM7T! UYQ&gt;AT#$6MD9HNA_.J%&amp;?NO_F%#1$O?:&#039;
+M4.C;^@)$NNF%&lt;DNA;;&quot;_54;B$C0T/;5%2/7-V:3U+F9,.E@[Y&amp;\F#D&amp;#7DM$
+M&quot;IQYA(#EJ[V+U$.^&lt;\[^FS_0IM/&#039;7!.R)P_5 -KN,&amp;8L=\DXL+EX PTMGP1(
+M#&gt;QI\V9@43#7C7K^0+&quot;Y^ *MVP.]]@]JUYR VK #RC5&gt;KXRY_9&gt;9)YY 0]*X
+M^B44NF/]MVX&#039;(Q=I+F3M\YTFBQ_00&#039;&lt;F$)(#E[9$ KHWX1I8H:.?RH#&quot;&quot;VB@
+M6]1&gt;^T=D4QG4&#039;&gt;((/W =[TR^#DY CPS.G&lt;8X;,T$ACO6]7&lt;4N.&lt;AS0=H8R8A
+M=0CUI,&amp;Y(\\^R_R;!]&quot;&amp;/:/#?:-VVJ0!:?D])N&lt;D!O&quot;_#QHNP(Q)&gt;^;7\ &amp;-
+MA9CQA1CXO!GHKX-N.YAF*?P8P&#039;5W;.4\&lt;IT3^#K^-F@T?UHPL&#039;[4&amp;,&quot;A.75)
+M149]O*_Z3X,V5K5$&amp;7NUG.G+,NJ%O*-)_V&#039;0P%R)N9;/ #.6Y\!#9V5_%C0T
+M&#039;1:&lt;&amp;&lt;H[-&quot;SACX*&amp;KYB]4TD-#C2 _TW0\(28L53G,*_67P3=BQ0ZD=!$_IBA
+M^N^!&#039;HP4.I&#039;\8PS@?PTTT$?# @Z7=T0 RA\#K3LSW1&gt;&#039;*&#039;3VGY7]*=#Z,K/V
+M 5+MO9_-&#039;P(-=/=H?C/D3 E/8Z@_ QH8]A5Z[:\&quot;S]C3K?5&#039;0 /#&quot;4X]UQY2
+MX.U(^H^ -M&lt;XJ8Z3OU\ RE\ #8RSF;6GR]T+]?5!7QDSEKO/4NORH%L)L)=4
+M:.UA +\XZ!610N=1N$=&gt;]:5! ^.D7JK9&quot;C9/MKTR:&amp;A=&gt;G!NR]TX .6ZH*&#039;E
+MG81SHBBSSTE[1[S%I50FZ:J@X9P&lt;FXV5+@#]S&#039;J&#039;U&amp;!+ _A%0&lt;,SS&lt;&amp;T^9QE
+MJ1@X2=W0JW5)T+JU-M+Z&lt;$E5-O1ZJ-/K:\S4]4#C!-@3-&gt;&gt;%DJ0R&amp;?P@&lt;+&lt;Q
+M@%\.-+!815H?*DF2^O.Q1OXF#LRK@=:O;&gt;_\B ):#KT-ANIK@1ZJ.* HFI;&gt;
+MHD33%DQ^-Y&amp;JJJ[3$CK2&amp;6UHH#&gt;9E5T)]&amp; &quot;K)9&amp;1?&amp;4XD=1W#*-+;%E&lt;BRK
+MFQ.-CEA!^#ODT$&#039;C9%O&amp;_?=U0(-!L[86/&gt;/X6:N*R_OP!&amp;=?$1JC89KN]T4=
+M XU+R#(U@%\%-*XX,,3Y5I7%+:T5%&lt;^J. %I&lt;CU0J+MOX_PHZ#K9EN$$_&quot;J@
+MS20;&amp;(*UVP/UUXW! HW5Z&gt;UQ!M(JN1XH *9=_XTD/&lt;?&#039;&amp;9;)ME&lt;!;1&lt;50MI%
+MG=ZC]J&amp;LR%GA6B674FW2QEV3)-VF7,&gt;S6?DZK@-:DLI[M[=+\DX#UK*Q#G$O
+M45P4IJ/*4CSQC605:W0ET&amp;AJG;&lt;Y*MTVCI9:C$&quot;M%:T&gt;*&#039;!DZ3[U1AEE8%X*
+MM&quot;15C_PL)$=%J0&lt;*[-OTKZ&amp;&amp;+$K(7@6T\Y :545^$KO(N%12_PWL&gt;=\A7%_8
+M_R*@H5Q);U6WY#*H W&gt;H&#039;BBP9U_(7UM7]&quot;*@C4SZ*GY$Z650#Z1#&amp;_8&quot;[]O:
+M$K)7!(T:]4&quot; QFGE=0)&#039;K(7QR&lt;&amp;J&quot;/!K@D9+K=N2 )YCI/[6 UW4G-\76A%K
+M=%70DO2,DNM,P)LE$H KO:SJ\F3;ZX)&amp;0_6,-&lt;KA&lt;O\9AN.M3M0/EP: 7Q@T
+M&amp;JKOYW!,CBLI&quot;MMGDCL4+FS2UP -W,&lt;0:&quot;DN[Y&gt;8E=T&gt;L&lt;3H4G\;-%0&#039;.;]G
+M98R&gt;X492HAN^449WR2UH27ID)W!-$J6D46/K$: GB HZ+HOSHL[RQ\NFQ\AR
+MRS&#039;H&amp;O4Y?1U)]/R8;DL!&gt;EPCH)&amp;J:$EBS+92$C0&#039;^TJ &#039;M&lt;X:+34BL[EZ]&quot;2
+M&gt;WNI($&quot;/:P)H[, &lt;3&amp;&lt;Z1DIZZZX(!&gt;AQ30*-K:)G&quot;222HV?&lt;O3L!&gt;EP304OQ
+M\Q3]MY+=JO[-14SN3(!^H3X^UDA+;^5@?R- CVHZ:!R DAZ*.BF&gt;PS&lt;F0(]K
+M#FCLU3K.*JKE!&gt;F^!.AQS0*-A^JC?!UY,3 X&quot;]&quot;3-1,T?JI#&amp;3P;2]$B,F9&amp;
+MH/VEF]?^5=!2N7&lt;2K9+D]]Z2JG5&#039;ZQ&lt;$X?+&quot;SW\6=-U_[X@ZS2B]=G-#:]=7
+MH6&lt;N#^^^+.B*-+G]1;U?K%&#039;Z&amp;%Q2M71?!5IU5V717A5TF:/EZBAJ;!7=8:A&amp;
+M@_/HK:P%K:Y,MKLDZ+B\XUQ$);V/-J/ROKD!7-%N!75P9@ Z7%W5^X*@\&gt;#[
+M&gt;F1:_AP9&amp;-%D-]_6*JI%TS&quot;O &gt;VMKTAU#=# ^S;=^/YC^=+2:!1U540;!J!D
+MP_9.EJ!]%C7FK@&#039;ZGQF],3\[U)0T&amp;HX0_46]F0$&lt;89[8G*6EZZO0UED4N+@(
+MZ%=&lt;=UQ&amp;O4P&lt;14G&amp;^\YM,C&quot;3Z:VYUH*P,95%;C36I4&quot;7MV&#039;+9G)[C*&amp;N&#039;LPS
+M&gt;+24:-9F!9KAUN(7 DU)@5&gt;R\:95L4VVU;+[Z-NU%K3GL&quot;LU=AG0&lt;4&amp;+*4A&amp;
+MQ^D:-;NEEC(00L(8M,=T3_&amp;+@-9E&gt;I3G)-!HJ&lt;4FV591\OOHLFXM:(_M)AO7
+M  VMD=+-$T&#039;7865KAVI%&amp;XP4FJ!H\EL6DLL/+M050.OFV#8I4\;HE]#Z;&quot;7I
+M&quot;?8X@LJ)L&gt;&gt;AS[8.*-8%0!NCVZ0DDXU36.N2;9-\:N&lt;QH&amp;F@5=:M&amp;&gt;OTH.% 
+MB&gt;[NLY^#6:HS&gt;);.O[7HL:S7G@&#039;:61I;0-7)04-K;)=W!36Q+N=X%/RS7U=T
+M@I19/&lt;&lt;RT-W2-JQT:M!@?)L4+&gt;\U,;00NX^N?&lt;I[/A&gt;UDE CA9B #OK%JACI
+MS*&quot;!/38X*_T0ZOAY2W!H]1AJ[.J&lt;Y&gt;M(U_7:4T &#039;*VN)T71FT/I(&lt;U:2?LM]
+MAXII*3V &quot;Z.NYA3LS]9C&#039;O%?A&lt;YVF,\-VAC!W$MCPYC?2U74T8[&#039;&amp;CTF]M_H
+M8DN75&amp;U1_C?5W&#039;07TA.#AA;MT6M9SZ40=^H)IA-\&#039;&lt;6$L 0MB6:;M6&gt;&quot;5L,-
+M=RNL=5K0X&#039;&gt;KD?ZSSWJ#\$&quot;&quot;QL 0WE,YFFRKC;\O:T&#039;[[N:;PI\4-+ &lt;RD1,
+MR^X]?_]PRM7 I+PG/&#039;LC2\D6F;5G@?:8A!;0=4[0P.EN&quot;-9Z]GD/,S&amp;)&lt;LJ:
+M*&#039;Z08XWR_BO%&amp;K3O;(_YG*#AX Y7;W):W];&lt;BR_ZU11_!V%6]BD=M1UH-#AO
+ML^EH5R&lt;$;=!&lt;&amp;$IZ[TVFZ84.ICFVAGK^)&amp;,W.!- ,]E%89).!UJW*&#039;,P1&gt;M&#039;
+M HZ5+IGHP:R&gt;G;E&lt;DA5,&gt;^T!T.H6NXT2=#+0P*:YJK2HE]]4W&lt;?61Y-=U6AU
+M]KV2DA=L5LYMM6[5H6R.Q5RG @ULD@LC&quot;/ &amp;&lt;:Z:M=L8&amp;EO&#039;?/GT5-:VGO=7
+M (JBL!Z&lt;7_JY6=7=]=F&gt;&quot;#30&#039;&lt;(&lt;+/0,PZFW2C?DZ(MZPJ:C&lt;QT13[Q=&#039;DZ 
+MW8;S%W3H,]JX;*K. ]JP_&amp;&#039;.3;8H,.K9*7#?0;832H BS&amp;.YK%UAG\AH NQR
+MO4 &#039;_HH$V&amp;4Z&quot;VC=#H8&#039;9]5M[Z0,3&quot;_#HVYU&#039;ZWTFMSZUI)RU($9C^?C+E&lt;#
+M.MP=\VE &amp;X36+(?]&lt; M@! ^&lt;-DL?G!4E[2^.4,^&lt;,G)/+%-]SVSV()RI,X!&amp;
+M@S-A285Z[:$3H)&gt;,;&gt;&amp;II#WGU3N&quot;*%L&lt;W+=&gt;&quot;NJA-@HA&amp;=&#039;QH(%!PJR2LT5-
+M.F:&lt;9-DSAG]B K5^\-%&gt;4KQ- L(FZ&#039;C0-FE/$9H-F Y:Z^?2MJ)\\8[BF\VW
+M:(J6%YM9JZ-!FZ0E56&quot;3-V!&amp;$S(*YJ%&quot;&quot;-VX?2VY[=^H[YJUHX6DHV-!&amp;R1G
+M)-4&amp;K+L4ZYDR4-ID(!,&#039;EQW9%W55N ?UVK6.! T-@O=&quot;]2DV8&amp;A2C&gt;%9WQC^
+M&amp;/9Y3,B@9Z&gt;RV-D2UM5QH&quot;$QT8:6+0HME^+;2O)&gt;KUV1LS!G)/*L5!RIWHZ/
+M=DA&#039;@08VJ?_U*=FBD&#039;@6EI875:&lt;[QOGO*Y-M6&gt;C(P?FE@T #TAQ,]2A)P9 2
+MD#!8B;.Z4UU;.X&#039;.E,/FVE\= IJ8:*,&amp;E.IXNDG)V\!1H;U&gt;^S$2HK\&#039;Z.=-
+M9IX9N40&#039;@#9,@L\Y],C9HD&quot;W?((Q&#039;-,/0^76&gt;&lt;*T2+#7R[&#039;#&amp;%V$SI[/EJS]
+M09L$8+C.$N4L4D!&quot;Z-B^&#039;%JF&#039;;;CO,O[:,;D@#&amp;&lt;L9ZY=^22ZE=[@]9)DV;5
+MIF0J0-)9H6,&quot;U-CQHALZR7&lt;!C3-S1CA/*&quot;6Z5HIWBEZ[UJZ@ 20%Y:NT&quot;&#039;9B
+MBK3JM5X.W&lt;N:**_J/EKK=7M[29RHAT^U?[0G:&amp;&quot;3+)&lt;^)5L4&amp;,296\\8;@99
+M-:5XA99N%4+R4:&amp;=IS5C[0B:;-9VR9D*P&#039;0(3H]@,/G05J+177*4;#Q_&gt;J6B
+MU#T7Y_U FTY(B!2RR=FBP&#039;3)9PT.Z4#WQN9@VV.6(OMDF&#039;&lt;##4R212ND/!)@
+MDLR= 7E(MZA9U8J2;3T&#039;BQ_R?N&#039;:D[4+:$CR-ZD!Q4L%22D;:&#039;&quot;F&amp;,-M&amp;F=M
+M1M7E92H?ZJ%&gt;*I)V  U-CS!K]ARRSQF:A&quot;65ZM/.LJC&amp;\($L3-:&lt;E=.LG-O:
+M&#039;C1Q#2R[5+,V 9A*F;G1/=6R-J&gt;X]C)EZND&amp;YY&lt;V!^T0EU04CPYE(4;9= #2
+MTK9D94*J]$KE\OHM$;;2MJ#)WHN0XKV ).^%ZB\YJZ:L;9-+]:M&quot;/B*,=ZHV
+M!4TT4 &gt;T6I?$DI&quot;T0JB ^&#039;_5G+&lt;/\7W&lt;3CHXO[0A:,,BF;5I]D[=)I]%?I+$
+MLVJES(K-D/3,]\ZEFJO-0$.&#039;Y*5R:(.S0TC9P)DYQ&quot;&gt;ID\ZJE3&quot;H!#&gt;B)-BV
+M=A0#;07:)&lt;VF5(?R2&quot;#IK)!6YT,G_E^UJ]H/\FW;&lt;ZRQ+)6_D38!#72&#039;\.@#
+MC_SJ ]TF9^:0K:0&amp;\2S7LAS?1:=:Z89&amp;ST&gt;Z=$OG7;4%:)/TZ //($ZG #J+
+M8-9VR&lt;F&#039;&quot;#/!YQ%BPNCS&amp;H(1;!8U%/EGGFM_M0%HB^&quot;&#039;D /**A-8I,P&lt;)F&lt;!
+MP]?F;EXT1??DY&#039;.PCYB#-HB1FM0E%&lt;FD%=+\0.2%6-\8#O2 .&gt;E2V:)6_C9B
+M&quot;QI28G[(&#039;AU C&quot;\** LQ8#C$LP:-X=!-F98RJ#3_&quot;H/S2TQ!$R.%9.H:F!@I
+M- SL]7^1,*.S2,_?&lt;#5F=I/J+E^F-6,Q! TLTC+&#039;HRV.+$)?K]+29B&#039;Y+&amp;I-
+M)U-=N)-15Y&#039;&quot;8@O8&#039;&lt;4.M$,:9@.;LE47&quot;9@&lt;6.3%*3 ]0JU0VEFUH!W&gt;UV.^
+M76AP?HD5:).T&lt;E;I&lt;S!29DY .8NXW9GJ3W$2.LK*65EUVVSGB^W$!K1.BOE1
+M*3$_E+-\REP;DMP7Z*QIS0P&amp;:PK6/._R5994OV(!6C=]4@(L#9A%.$OU*,&quot;@
+M1&lt;*,SIKZ_*$EYPM1EQ&#039;5&amp;GM&gt;,0&quot;M$QV$M,$9DLY2G65GS;(WZU:PJ ADI&gt;Q9
+MOY.EUH,F[C3G4GHX0&#039;)ZJ+2R/9!D6Z74+R+&gt;@97-)YW0I@[GUDK0D%2F-:1%
+M&quot;NFDA5@84,\B8J8$GI!E!?U*_C3%D7JUJ?:/UH$F[C07T(H@DHI^RK1-5@$I
+M;5:FQ1?1988S@KR+E.9@/;U6@28M&lt;T):/HI!VI\NI&amp;UT3ZY?M*;@(C3#B4NM
+M1T9QL%Y!:T#;A(9)2X#578*_:2QMEN&quot;,=%8^?N@F$QIUE=)LN)?0&amp;M##;8Q6
+MZQ)LFC:[3+HW-BN+RS,4(5DIUJ #2CX*,0&amp;66=KL,ID)S:L5/[3@^IP9@_;)
+MGB-L)26[%9FES2Z2Z6G$C:&#039;OVG&#039;U.UFJ!_J5C#CERW5!!PXE6X:8-BO[%&amp;# 
+M)I_%&lt;M#477DXUBBBY0U=26W0@99$)5)59&lt;EXD$P;M$VIT@I=4CJE8Y,71^BL
+MX&gt;5;Z-HT5\DB 5=-.].R.%75HZHN,]&lt;O:. _I/B9A$&amp;0XC%+&amp;&gt;L9?Q&gt;V+JUZ
+M)S&#039;_BC:98FD&amp;FR;#^RWD7:7AG^BS7_H!#7RTILQ]_.T,#9%^C*5S?PN&amp;42=3
+MYJ(I&amp;&amp;G;0C78T.-O^?EK6A;?M6M$=T[5#V@C0M_OE4!D*.@+)Z,-1[?&lt;6I2Q
+MV2)/IJB52PAC&lt;T IA,%&quot;MEQ;4&amp;[:Q0)(1O4#6D9LM??7,]#&lt;I)KP3H-:Q(]1
+MNR0T3(LRF3(\4N42VEEL!%VUD&amp;Y_#7,+] VA_1H[?%5=72&lt;+&amp;B2G8D@;THEE
+MO&amp;E1# SEJE&gt;,+!C1%[2%^JR$Y8M,K$$BCP20D$M:,+P[WO0%G: )I\_N3086
+MN&gt;XZ)&gt;R/5&#039;==I97Q%AK7%S2NCLL0-+&amp;:B$L)( &amp;DLF+4&gt;B=&quot;$S0$6DU&gt;6M&amp;1
+MDPMRTX*U26$GM+.$)FD(],&lt;8N+PN&amp;J&#039;85T@S:!%KD 3GJ\-W/0V!UO(\KW?O
+M70YZ&lt;* E;$#8:%DA#*&amp;I&amp;@)M6I9E/YF#II6TT$F%,%3:64+3]07M(;31I_&amp; 
+M!V/0+L4] %Q2Y1+/I%ACSBI#23KZ?(?FDR.V1OHQF-Q_I]V,08&gt;T&gt; 2=9 P/
+M+YCZ@F3WPACJKP$\+6E^?9#FN48MZA$=_[Y@EOP#.D7#\NT-A&quot;GH@.9O(M8@
+M&quot;;QMS=J;R&lt;QO6!CWL_[I5C]4[#.*\6_8FIX.3#P,-T.SHSS[&amp;H8,+\5&#039;TL\1
+MZ&quot;GU 9JS&lt;%@_H&amp;U&lt;O.&gt;F-G?@E\Q AR[E#32)-4B&lt;\Y9;&#039;!&amp;P;&quot;S&lt;0VI._2,^
+M6A=&lt;2/#O&#039;OXDZY$VDE=$ZOW=WG^.-*2AT@0]Q44V=Q?J7W]T31IOM8Y4K%M&gt;
+M6=_U54@#9I)JD(17C[K\]R]&quot;3S#\?@O&lt;13;;+P 7_1P&#039;G3^&#039;&gt;)&lt;(6590&quot;RN=
+MSY&amp;J.?*L-[:$.(^_E!7THL3Y3#BM&quot;!,[P&#039;O^Q5B25%53O%=$V9Y:BU*0FUS2
+M8E6P]EG4!JVB1YJ^&gt;S8/_7+O&amp; =,1$\%  3HM+P^S6J.P!!SQ:W%1,VY5 &#039;T
+M4#,LPWEWTXD9&lt;WWM7M2*0G]=B0YH8=%JD)!C?S=W1NZA-NCBTU#?G[4[7Y C
+MG/B!0]PUXS&lt;&quot;HB,E?AMTW-&amp;B!PD47#@%%]7R47/,YUF1&gt;L&amp;!NM-HZV I8@T2
+M&gt;B&amp;,&quot;ZD%VD*+U_P[5;&#039;19W+KKP&amp;&gt;AN&amp;__H)&amp;4[,4/XHW:&#039;A#_4#]&gt;NCH&#039;7C.
+MZ[N/VH34)M4Z\&amp;U*N,JEU (M(UC*3]O!,_+VGYM(^-\/Z,^1%VC@/J4X?:W4
+M4-MNORAC.@8T*2!,#L=JD%Q(+=!X!=T!/?SH@8PGYZ!S)$Y@TW,KS3$+3\5G
+MW&lt;T1H,DU2&#039;8*(=E&#039;RT#C&amp;*ZRM7&amp;I632S;JBU03]FW&lt;T!H$F[D*JT0A@7U&quot;+0
+MAH;ZZ4QO&#039;4&#039;++CR\[P3:&quot;&lt;*WUG6NA HUJCN]!LDUM 0T3*KWHODEO3Z&quot;K&gt;,[
+M@4Z&gt;Y5N)MF)/9# &lt;7$&quot;M7&#039;)-30!M:XW4UU&amp; ,R?BWV4MQ$&gt;J^LA.H&#039;,\&amp;:PY
+M2^])_B*!H&lt;5SZ/^9U)&gt;O6J&quot;=9RM.7L&lt;SKG__@E?3N;V.(I1M2TA]Y-D&lt;P9.R
+M&#039;29C&amp;&#039;06^$CX&quot;]P6M^D!T*%/*X1Q6?4,)H]O\T@:@XGI-VKZ:@-3??QRKD?L
+MSQ&#039;G\5E&gt;^8CY/-/8+-!J?=MVAIT?2UM@&#039;W2PN ;)N=4&amp;K?RNFK CL^C./ T\
+M&amp;DL:Z!R)M7=&#039;@ TF1=W&quot;&lt;%+-5@:3+^A_%B;=M&lt;E/50\TQ1A^;;5!&amp;]CJ\1JE
+MK5N&#039;:&quot;T&#039;&lt;RZLWI%//P#4N&amp;G2,$0_9/.:QQ+0_WQT ]&#039;&quot;)MT&amp;K6YN:CU.&#039;&gt;^5
+MBENG @$ )O[DWFV0.CY:&gt;O&quot;;XV1TCQC8&gt;:4!&amp;* !OYS9TA:!-O*!GF&gt;BP&amp;_ 
+M=W#IBDXCZH#^)Y&lt;XY1JIYMR=Y( ,3\2KM%8];8._1^JD.*&quot;6^$&quot;&amp;\^*&amp;(A=H
+M6@0:#SC5TKY;_QA,J(4PKJ\N:&quot;A&#039;41-&#039;\(RBWF06_H8&gt;U;9NX_=(V=C!PV97
+MY/B6S!WP%H/NCS&amp;3I9MUKBVM$,9?4* E26L9JEN65@&lt;&#039;AE9_(@5^@PGK^1?\
+M/?*JBP3M.KM&quot;F6]#/ +T:++MWQ#4]9ZM3Z\U^(+KOR(&lt;&gt;5UU20LY!K30[A*@
+M.9$ S8D6@RY=ZI\+G4R+0&amp;/+SOUO3YG_G!:!QJ&amp;KF&gt;BY+Z4EH.M,@Q4N::$#
+MM &quot;T7W3#UX3.KUF@[[61!F=.,RU?)+2#9H%^VUV?,UUD0L=K,F@YNKT5T$I4
+M&quot;)U3DT&amp;;]D=B&gt;+Z@#DK)$=I;S$&quot;#EU?-@\*2&lt;D8Q @TM)6MF:H^LG\O/F^ [
+M71@VCF&gt;KT6L&amp;V_ZM%N@=:&lt;M:7YJ)#6@01CAO! G;4E(FU[RPW/R6.Z\?,+VF
+MILE-:TH!O7Y3?FH3A?A 1-QT27]=;HW8@(:X;H.,TSQ=1+KBW=\1OJO:!Y6$
+M0T$JZ:%I6EX^ZBC06&quot;K0;U&#039;Y&gt;.=G_%.?S&gt;&lt;DAZ A5?[:&gt;V*T47@L2:_JWDJ3
+M@\&quot;UPCI=&quot;OR SG0(S?!18=*QE$((K;M4??Z\=&quot;&#039;4?:DD=-! #5&lt;/AVQ 8R_&#039;
+MQ[/U?&amp;I,+GI=8=&quot;U\? #.JV?3A+C4A6Q5#\?[9-E=Y.&gt;=3!@]LK)^%06 W61
+M,8B/U.?C&amp;F/@YY,Y]\0&amp;M(] O_MKV_.65S/Z&amp;T*@&quot;^D1@BYHNXK5 =&quot;:%&quot;NX
+MOIOIU&lt;_0PW.=NEJ/59&lt;=&lt;__!O*XV927HMQ#_!.J_2&gt;&lt;\9T9C- )=A,LS[_Z8
+M$&amp;@_CU$S[8#^5V+O;@/:N&#039;TFK2::UMS5,&amp;BX^469IO$=%ZYP&lt;2&quot;XYKS&amp;:#-#
+M&#039;]R?&amp;4Z&quot;N*,?\VH.:7:@I?*F:0J3RUU=&quot;+2!&amp;&quot;&gt;0 !I/QK)8^G2]*GYZY;.N
+M,P1NTMTPU#H3QY5BV=!! QIX&lt;6D:_J,*&lt;:T:]#?NK!)4C)97VGN[J&quot;2QA&lt;,#
+M@S80244=!EVG&#039;V?J]P0U+4OT!#,#ISO%H:Z;4AQBT&#039;7YJ0:T&#039;L6IH5N15&amp;#0
+MI&gt;*8BKQ[B_ZG:_&gt;W;^N6\3Y$UZ!QZ9%G&amp;@^&quot;ON%4V=8\VO#]L$&quot;?_@,IXIUE
+M&gt;1\T8G]#&#039;SP1:.#=I?B&gt;I9-V$&#039;V)E0G4&lt;++HC3KG?;&quot;N0:.E2/R4R).QKYPZ
+M/QJXF12_02,Y/=&quot;H#6$I&gt;#*695$E/6&gt;LKMDY-4Q;492&amp;-.\C=0-:K].DB,NK
+MK])&#039;CO\!2@,Z5DS3RM(!T+EE6C(&quot;#7U%,2UM5JDQEMXK&quot;*&amp;JXG;]X+Q)-Z#_
+M!&gt;4&#039;= 8!,+4G[H_[H#W$$0!@%[B]NT\I!U&quot;K&lt;(W\%FB8HN4V](J&#039;^T_/J@@ 
+M1ZK4WG]-%!O0[QIW2!:VALXL2/K7] )=EPML0#]QMNS+Z-D#_:]X/M#GMZK 
+M[=Y_X.75 _&gt;*+=!H&gt;56AY569U]L&quot;X^55/&amp;&lt;VQ 9T%D71^^=(@&#039;;SJ#9F&amp;NBY
+MX!_PXT%2FAU&gt;\ZB;&lt;&gt;P&amp;]&gt;=R8W/RT(]Y77G=BK+Z.C!J#&quot;8I^D#%[@W@X[\_
+MP&amp;&quot;&quot;E]%O@[P _?9.UMY&#039;_&amp;_73=F;++?=E-;KM,]UWFY*PWK[*P&amp;]&lt;O* V(&quot;6
+MOYX,7&amp;&gt;IX&#039;Z!=3XQLHSA$&amp;!9UW4CN0OOU2G%R#*F(M)5O=!&#039;BCB?=)]2K$*)
+MPE3ZA!*)CON$8K6.AH:LU/+FN4F%=A([@PG@HC#)927BNCF1 ,V)!&amp;A.)$!S
+M(@&amp;:$PG0G$B YD0&quot;-&quot;&lt;2H#F1 ,V)!&amp;A.)$!S(@&amp;:$PG0G$B YD0&quot;-&quot;&lt;2H#F1
+M ,V)!&amp;A.)$!S(@&amp;:$PG0G$B YD0&quot;-&quot;&lt;2H#F1 ,V)!&amp;A.)$!S(@&amp;:$PG0G$B 
+MYD0&quot;-&quot;&lt;2H#F1 ,V)!&amp;A.)$!S(@&amp;:$PG0G$B YD0&quot;-&quot;&lt;2H#F1 ,V)!&amp;A.)$!S
+M(@&amp;:$PG0G$B YD0&quot;-&quot;&lt;2H#F1 ,V)!&amp;A.)$!S(@&amp;:$PG0G$B YD0&quot;-&quot;&lt;2H#G1
+5?^\XCY+&gt;-/6)     $E%3D2N0F&quot;&quot;
+</UUENCODE>
+		</IMAGE>
 		<SYMBOLDEF id='1'>
 			<NAME type='0'>MOM_SPST_NO</NAME>
 			<REF type='1'>SW?</REF>
@@ -181,20 +360,20 @@ download the executable.-->
 			<TinyCAD>
 				<PIN pos='72.00000,44.00000' which='0' elec='4' direction='3' part='0' number='2' show='0' length='30' number_pos='0' centre_name='0'></PIN>
 				<PIN pos='92.00000,44.00000' which='0' elec='4' direction='2' part='0' number='1' show='0' length='30' number_pos='0' centre_name='0'></PIN>
-				<POLYGON pos='78.00000,42.00000' style='6' fill='0' polygon='0'>
+				<POLYGON pos='78.00000,42.00000' style='7' fill='0' polygon='0'>
 					<POINT pos='0.00000,0.00000' arc='0'/>
 					<POINT pos='8.00000,0.00000' arc='0'/>
 				</POLYGON>
-				<POLYGON pos='82.00000,40.00000' style='6' fill='0' polygon='0'>
+				<POLYGON pos='82.00000,40.00000' style='7' fill='0' polygon='0'>
 					<POINT pos='0.00000,2.00000' arc='0'/>
 					<POINT pos='0.00000,0.00000' arc='0'/>
 				</POLYGON>
-				<POLYGON pos='81.00000,40.00000' style='6' fill='0' polygon='0'>
+				<POLYGON pos='81.00000,40.00000' style='7' fill='0' polygon='0'>
 					<POINT pos='0.00000,0.00000' arc='0'/>
 					<POINT pos='2.00000,0.00000' arc='0'/>
 				</POLYGON>
-				<ELLIPSE a='80.00000,43.00000' b='78.00000,45.00000' style='7' fill='0'/>
-				<ELLIPSE a='84.00000,43.00000' b='86.00000,45.00000' style='7' fill='0'/>
+				<ELLIPSE a='80.00000,43.00000' b='78.00000,45.00000' style='8' fill='0'/>
+				<ELLIPSE a='84.00000,43.00000' b='86.00000,45.00000' style='8' fill='0'/>
 			</TinyCAD>
 		</SYMBOLDEF>
 		<SYMBOLDEF id='2'>
@@ -207,15 +386,15 @@ download the executable.-->
 			<TinyCAD>
 				<PIN pos='82.00000,43.00000' which='5' elec='4' direction='1' part='0' number='1' show='0' length='30' number_pos='0' centre_name='0'></PIN>
 				<PIN pos='82.00000,51.00000' which='5' elec='4' direction='0' part='0' number='2' show='0' length='30' number_pos='0' centre_name='0'></PIN>
-				<POLYGON pos='82.00000,43.00000' style='6' fill='0' polygon='0'>
+				<POLYGON pos='82.00000,43.00000' style='7' fill='0' polygon='0'>
 					<POINT pos='0.00000,1.60000' arc='0'/>
 					<POINT pos='0.00000,0.00000' arc='0'/>
 				</POLYGON>
-				<POLYGON pos='82.00000,50.40000' style='6' fill='0' polygon='0'>
+				<POLYGON pos='82.00000,50.40000' style='7' fill='0' polygon='0'>
 					<POINT pos='0.00000,0.00000' arc='0'/>
 					<POINT pos='0.00000,1.60000' arc='0'/>
 				</POLYGON>
-				<RECTANGLE a='80.40000,44.60000' b='83.40000,50.40000' style='6' fill='0'/>
+				<RECTANGLE a='80.40000,44.60000' b='83.40000,50.40000' style='7' fill='0'/>
 			</TinyCAD>
 		</SYMBOLDEF>
 		<SYMBOLDEF id='3'>
@@ -287,7 +466,7 @@ download the executable.-->
 				<PIN pos='82.20000,65.50000' which='0' elec='0' direction='2' part='0' number='18' show='3' length='30' number_pos='0' centre_name='0'>3.3V</PIN>
 				<PIN pos='82.20000,68.20000' which='0' elec='0' direction='2' part='0' number='19' show='3' length='30' number_pos='0' centre_name='0'>Vin</PIN>
 				<PIN pos='82.10000,70.80000' which='0' elec='0' direction='2' part='0' number='20' show='3' length='30' number_pos='0' centre_name='0'>GND</PIN>
-				<RECTANGLE a='56.00000,20.00000' b='78.00000,74.00000' style='6' fill='0'/>
+				<RECTANGLE a='56.00000,20.00000' b='78.00000,74.00000' style='7' fill='0'/>
 			</TinyCAD>
 		</SYMBOLDEF>
 		<SYMBOLDEF id='4'>
@@ -376,8 +555,8 @@ download the executable.-->
 			<REF_POINT power='0' part='0' pos='106.00000,124.00000'/>
 			<REF_POINT power='1' part='0' pos='106.00000,124.00000'/>
 			<TinyCAD>
-				<RECTANGLE a='100.00000,120.00000' b='96.00000,120.30000' style='6' fill='1'/>
-				<POLYGON pos='96.00000,116.80000' style='6' fill='1' polygon='1'>
+				<RECTANGLE a='100.00000,120.00000' b='96.00000,120.30000' style='7' fill='1'/>
+				<POLYGON pos='96.00000,116.80000' style='7' fill='1' polygon='1'>
 					<POINT pos='2.05000,3.15000' arc='0'/>
 					<POINT pos='4.05000,0.15000' arc='0'/>
 					<POINT pos='0.05000,0.15000' arc='0'/>
@@ -385,21 +564,21 @@ download the executable.-->
 				</POLYGON>
 				<PIN pos='98.00000,114.00000' which='0' elec='4' direction='1' part='0' number='1' show='1' length='15' number_pos='0' centre_name='0'></PIN>
 				<PIN pos='98.00000,123.00000' which='0' elec='4' direction='0' part='0' number='2' show='1' length='15' number_pos='0' centre_name='0'></PIN>
-				<POLYGON pos='102.80000,117.00000' style='6' fill='1' polygon='1'>
+				<POLYGON pos='102.80000,117.00000' style='7' fill='1' polygon='1'>
 					<POINT pos='1.51000,0.49000' arc='0'/>
 					<POINT pos='0.16000,0.04000' arc='0'/>
 					<POINT pos='0.16000,0.89000' arc='0'/>
 					<POINT pos='1.51000,0.49000' arc='0'/>
 				</POLYGON>
 				<WIRE style='0' a='103.31000,117.49000' b='102.06000,117.49000'/>
-				<POLYGON pos='103.00000,118.60000' style='6' fill='1' polygon='1'>
+				<POLYGON pos='103.00000,118.60000' style='7' fill='1' polygon='1'>
 					<POINT pos='1.35000,0.49000' arc='0'/>
 					<POINT pos='-0.00000,0.04000' arc='0'/>
 					<POINT pos='-0.00000,0.89000' arc='0'/>
 					<POINT pos='1.35000,0.49000' arc='0'/>
 				</POLYGON>
 				<WIRE style='0' a='103.35000,119.09000' b='102.10000,119.09000'/>
-				<ELLIPSE a='94.92000,115.48000' b='100.92000,121.48000' style='6' fill='0'/>
+				<ELLIPSE a='94.92000,115.48000' b='100.92000,121.48000' style='7' fill='0'/>
 			</TinyCAD>
 		</SYMBOLDEF>
 		<SYMBOLDEF id='5'>
@@ -412,15 +591,15 @@ download the executable.-->
 			<TinyCAD>
 				<PIN pos='82.00000,43.00000' which='5' elec='4' direction='1' part='0' number='1' show='0' length='30' number_pos='0' centre_name='0'></PIN>
 				<PIN pos='82.00000,51.00000' which='5' elec='4' direction='0' part='0' number='2' show='0' length='30' number_pos='0' centre_name='0'></PIN>
-				<POLYGON pos='82.00000,43.00000' style='6' fill='0' polygon='0'>
+				<POLYGON pos='82.00000,43.00000' style='7' fill='0' polygon='0'>
 					<POINT pos='0.00000,1.60000' arc='0'/>
 					<POINT pos='0.00000,0.00000' arc='0'/>
 				</POLYGON>
-				<POLYGON pos='82.00000,50.40000' style='6' fill='0' polygon='0'>
+				<POLYGON pos='82.00000,50.40000' style='7' fill='0' polygon='0'>
 					<POINT pos='0.00000,0.00000' arc='0'/>
 					<POINT pos='0.00000,1.60000' arc='0'/>
 				</POLYGON>
-				<RECTANGLE a='80.40000,44.60000' b='83.40000,50.40000' style='6' fill='0'/>
+				<RECTANGLE a='80.40000,44.60000' b='83.40000,50.40000' style='7' fill='0'/>
 			</TinyCAD>
 		</SYMBOLDEF>
 		<SYMBOLDEF id='6'>
@@ -509,8 +688,8 @@ download the executable.-->
 			<REF_POINT power='0' part='0' pos='106.00000,124.00000'/>
 			<REF_POINT power='1' part='0' pos='106.00000,124.00000'/>
 			<TinyCAD>
-				<RECTANGLE a='100.00000,120.00000' b='96.00000,120.30000' style='6' fill='1'/>
-				<POLYGON pos='96.00000,116.80000' style='6' fill='1' polygon='1'>
+				<RECTANGLE a='100.00000,120.00000' b='96.00000,120.30000' style='7' fill='1'/>
+				<POLYGON pos='96.00000,116.80000' style='7' fill='1' polygon='1'>
 					<POINT pos='2.05000,3.15000' arc='0'/>
 					<POINT pos='4.05000,0.15000' arc='0'/>
 					<POINT pos='0.05000,0.15000' arc='0'/>
@@ -518,21 +697,42 @@ download the executable.-->
 				</POLYGON>
 				<PIN pos='98.00000,114.00000' which='0' elec='4' direction='1' part='0' number='1' show='1' length='15' number_pos='0' centre_name='0'></PIN>
 				<PIN pos='98.00000,123.00000' which='0' elec='4' direction='0' part='0' number='2' show='1' length='15' number_pos='0' centre_name='0'></PIN>
-				<POLYGON pos='102.80000,117.00000' style='6' fill='1' polygon='1'>
+				<POLYGON pos='102.80000,117.00000' style='7' fill='1' polygon='1'>
 					<POINT pos='1.51000,0.49000' arc='0'/>
 					<POINT pos='0.16000,0.04000' arc='0'/>
 					<POINT pos='0.16000,0.89000' arc='0'/>
 					<POINT pos='1.51000,0.49000' arc='0'/>
 				</POLYGON>
 				<WIRE style='0' a='103.31000,117.49000' b='102.06000,117.49000'/>
-				<POLYGON pos='103.00000,118.60000' style='6' fill='1' polygon='1'>
+				<POLYGON pos='103.00000,118.60000' style='7' fill='1' polygon='1'>
 					<POINT pos='1.35000,0.49000' arc='0'/>
 					<POINT pos='-0.00000,0.04000' arc='0'/>
 					<POINT pos='-0.00000,0.89000' arc='0'/>
 					<POINT pos='1.35000,0.49000' arc='0'/>
 				</POLYGON>
 				<WIRE style='0' a='103.35000,119.09000' b='102.10000,119.09000'/>
-				<ELLIPSE a='94.92000,115.48000' b='100.92000,121.48000' style='6' fill='0'/>
+				<ELLIPSE a='94.92000,115.48000' b='100.92000,121.48000' style='7' fill='0'/>
+			</TinyCAD>
+		</SYMBOLDEF>
+		<SYMBOLDEF id='7'>
+			<NAME type='0'>R</NAME>
+			<REF type='0'>R?</REF>
+			<DESCRIPTION>Resistor</DESCRIPTION>
+			<PPP>1</PPP>
+			<GUID></GUID>
+			<REF_POINT power='0' part='0' pos='84.00000,53.00000'/>
+			<TinyCAD>
+				<PIN pos='82.00000,43.00000' which='5' elec='4' direction='1' part='0' number='1' show='0' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='82.00000,51.00000' which='5' elec='4' direction='0' part='0' number='2' show='0' length='30' number_pos='0' centre_name='0'></PIN>
+				<POLYGON pos='82.00000,43.00000' style='7' fill='0' polygon='0'>
+					<POINT pos='0.00000,1.60000' arc='0'/>
+					<POINT pos='0.00000,0.00000' arc='0'/>
+				</POLYGON>
+				<POLYGON pos='82.00000,50.40000' style='7' fill='0' polygon='0'>
+					<POINT pos='0.00000,0.00000' arc='0'/>
+					<POINT pos='0.00000,1.60000' arc='0'/>
+				</POLYGON>
+				<RECTANGLE a='80.40000,44.60000' b='83.40000,50.40000' style='7' fill='0'/>
 			</TinyCAD>
 		</SYMBOLDEF>
 		<SYMBOLDEF id='8'>
@@ -545,15 +745,15 @@ download the executable.-->
 			<TinyCAD>
 				<PIN pos='82.00000,43.00000' which='5' elec='4' direction='1' part='0' number='1' show='0' length='30' number_pos='0' centre_name='0'></PIN>
 				<PIN pos='82.00000,51.00000' which='5' elec='4' direction='0' part='0' number='2' show='0' length='30' number_pos='0' centre_name='0'></PIN>
-				<POLYGON pos='82.00000,43.00000' style='4' fill='0' polygon='0'>
+				<POLYGON pos='82.00000,43.00000' style='7' fill='0' polygon='0'>
 					<POINT pos='0.00000,1.60000' arc='0'/>
 					<POINT pos='0.00000,0.00000' arc='0'/>
 				</POLYGON>
-				<POLYGON pos='82.00000,50.40000' style='4' fill='0' polygon='0'>
+				<POLYGON pos='82.00000,50.40000' style='7' fill='0' polygon='0'>
 					<POINT pos='0.00000,0.00000' arc='0'/>
 					<POINT pos='0.00000,1.60000' arc='0'/>
 				</POLYGON>
-				<RECTANGLE a='80.40000,44.60000' b='83.40000,50.40000' style='4' fill='0'/>
+				<RECTANGLE a='80.40000,44.60000' b='83.40000,50.40000' style='7' fill='0'/>
 			</TinyCAD>
 		</SYMBOLDEF>
 		<SYMBOLDEF id='9'>
@@ -566,15 +766,15 @@ download the executable.-->
 			<TinyCAD>
 				<PIN pos='82.00000,43.00000' which='5' elec='4' direction='1' part='0' number='1' show='0' length='30' number_pos='0' centre_name='0'></PIN>
 				<PIN pos='82.00000,51.00000' which='5' elec='4' direction='0' part='0' number='2' show='0' length='30' number_pos='0' centre_name='0'></PIN>
-				<POLYGON pos='82.00000,43.00000' style='4' fill='0' polygon='0'>
+				<POLYGON pos='82.00000,43.00000' style='7' fill='0' polygon='0'>
 					<POINT pos='0.00000,1.60000' arc='0'/>
 					<POINT pos='0.00000,0.00000' arc='0'/>
 				</POLYGON>
-				<POLYGON pos='82.00000,50.40000' style='4' fill='0' polygon='0'>
+				<POLYGON pos='82.00000,50.40000' style='7' fill='0' polygon='0'>
 					<POINT pos='0.00000,0.00000' arc='0'/>
 					<POINT pos='0.00000,1.60000' arc='0'/>
 				</POLYGON>
-				<RECTANGLE a='80.40000,44.60000' b='83.40000,50.40000' style='4' fill='0'/>
+				<RECTANGLE a='80.40000,44.60000' b='83.40000,50.40000' style='7' fill='0'/>
 			</TinyCAD>
 		</SYMBOLDEF>
 		<SYMBOLDEF id='10'>
@@ -587,39 +787,18 @@ download the executable.-->
 			<TinyCAD>
 				<PIN pos='82.00000,43.00000' which='5' elec='4' direction='1' part='0' number='1' show='0' length='30' number_pos='0' centre_name='0'></PIN>
 				<PIN pos='82.00000,51.00000' which='5' elec='4' direction='0' part='0' number='2' show='0' length='30' number_pos='0' centre_name='0'></PIN>
-				<POLYGON pos='82.00000,43.00000' style='4' fill='0' polygon='0'>
+				<POLYGON pos='82.00000,43.00000' style='7' fill='0' polygon='0'>
 					<POINT pos='0.00000,1.60000' arc='0'/>
 					<POINT pos='0.00000,0.00000' arc='0'/>
 				</POLYGON>
-				<POLYGON pos='82.00000,50.40000' style='4' fill='0' polygon='0'>
+				<POLYGON pos='82.00000,50.40000' style='7' fill='0' polygon='0'>
 					<POINT pos='0.00000,0.00000' arc='0'/>
 					<POINT pos='0.00000,1.60000' arc='0'/>
 				</POLYGON>
-				<RECTANGLE a='80.40000,44.60000' b='83.40000,50.40000' style='4' fill='0'/>
+				<RECTANGLE a='80.40000,44.60000' b='83.40000,50.40000' style='7' fill='0'/>
 			</TinyCAD>
 		</SYMBOLDEF>
 		<SYMBOLDEF id='11'>
-			<NAME type='0'>R</NAME>
-			<REF type='0'>R?</REF>
-			<DESCRIPTION>Resistor</DESCRIPTION>
-			<PPP>1</PPP>
-			<GUID></GUID>
-			<REF_POINT power='0' part='0' pos='84.00000,53.00000'/>
-			<TinyCAD>
-				<PIN pos='82.00000,43.00000' which='5' elec='4' direction='1' part='0' number='1' show='0' length='30' number_pos='0' centre_name='0'></PIN>
-				<PIN pos='82.00000,51.00000' which='5' elec='4' direction='0' part='0' number='2' show='0' length='30' number_pos='0' centre_name='0'></PIN>
-				<POLYGON pos='82.00000,43.00000' style='4' fill='0' polygon='0'>
-					<POINT pos='0.00000,1.60000' arc='0'/>
-					<POINT pos='0.00000,0.00000' arc='0'/>
-				</POLYGON>
-				<POLYGON pos='82.00000,50.40000' style='4' fill='0' polygon='0'>
-					<POINT pos='0.00000,0.00000' arc='0'/>
-					<POINT pos='0.00000,1.60000' arc='0'/>
-				</POLYGON>
-				<RECTANGLE a='80.40000,44.60000' b='83.40000,50.40000' style='4' fill='0'/>
-			</TinyCAD>
-		</SYMBOLDEF>
-		<SYMBOLDEF id='12'>
 			<NAME type='0'>P_MOSFET_ENH</NAME>
 			<REF type='1'>FET?</REF>
 			<DESCRIPTION>Enhancement mode P-channel MOSFET</DESCRIPTION>
@@ -733,29 +912,29 @@ download the executable.-->
 					<POINT pos='0.00000,0.00000' arc='0'/>
 					<POINT pos='0.00000,6.00000' arc='0'/>
 				</POLYGON>
-				<POLYGON pos='18.00000,20.00000' style='4' fill='0' polygon='0'>
+				<POLYGON pos='18.00000,20.00000' style='7' fill='0' polygon='0'>
 					<POINT pos='0.00000,0.00000' arc='0'/>
 					<POINT pos='0.00000,4.00000' arc='0'/>
 				</POLYGON>
-				<POLYGON pos='19.00000,24.00000' style='4' fill='0' polygon='0'>
+				<POLYGON pos='19.00000,24.00000' style='7' fill='0' polygon='0'>
 					<POINT pos='2.00000,1.00000' arc='0'/>
 					<POINT pos='2.00000,0.00000' arc='0'/>
 					<POINT pos='0.00000,0.00000' arc='0'/>
 				</POLYGON>
-				<POLYGON pos='19.00000,19.00000' style='4' fill='0' polygon='0'>
+				<POLYGON pos='19.00000,19.00000' style='7' fill='0' polygon='0'>
 					<POINT pos='0.00000,1.00000' arc='0'/>
 					<POINT pos='2.00000,1.00000' arc='0'/>
 					<POINT pos='2.00000,0.00000' arc='0'/>
 				</POLYGON>
-				<POLYGON pos='21.60000,21.00000' style='4' fill='0' polygon='0'>
+				<POLYGON pos='21.60000,21.00000' style='7' fill='0' polygon='0'>
 					<POINT pos='0.00000,0.00000' arc='0'/>
 					<POINT pos='1.00000,1.00000' arc='0'/>
 				</POLYGON>
-				<POLYGON pos='21.60000,22.00000' style='4' fill='0' polygon='0'>
+				<POLYGON pos='21.60000,22.00000' style='7' fill='0' polygon='0'>
 					<POINT pos='0.00000,1.00000' arc='0'/>
 					<POINT pos='1.00000,0.00000' arc='0'/>
 				</POLYGON>
-				<POLYGON pos='19.60000,22.00000' style='4' fill='0' polygon='0'>
+				<POLYGON pos='19.60000,22.00000' style='7' fill='0' polygon='0'>
 					<POINT pos='0.00000,0.00000' arc='0'/>
 					<POINT pos='3.00000,0.00000' arc='0'/>
 					<POINT pos='3.00000,4.00000' arc='0'/>
@@ -862,7 +1041,7 @@ download the executable.-->
 		</SYMBOL>
 		<SYMBOL id='4' pos='119.00000,102.00000' part='0' rotate='2' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
 			<FIELD type='1' description='Ref' value='D1' show='0' pos='-10.00000,4.40000'/>
-			<FIELD type='0' description='Name' value='LED' show='1' pos='-10.00000,-12.00000'/>
+			<FIELD type='0' description='Name' value='LED_DISARMED' show='1' pos='-13.00000,-12.00000'/>
 			<FIELD type='1' description='Package' value='' show='0' pos='-10.00000,6.80000'/>
 			<FIELD type='1' description='Vf' value='..' show='0' pos='-10.00000,9.20000'/>
 			<FIELD type='1' description='If' value='..' show='0' pos='-10.00000,11.60000'/>
@@ -875,7 +1054,7 @@ download the executable.-->
 			<FIELD type='1' description='Mouser Part' value='..' show='0' pos='-10.00000,26.00000'/>
 			<FIELD type='1' description='Cost' value='..' show='0' pos='-10.00000,28.40000'/>
 		</SYMBOL>
-		<POWER pos='95.00000,94.00000' which='0' direction='2'>IO</POWER>
+		<POWER pos='95.00000,94.00000' which='0' direction='2'>IO-19</POWER>
 		<SYMBOL id='2' pos='108.00000,96.00000' part='0' rotate='2' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
 			<FIELD type='0' description='Ref' value='100' show='1' pos='-7.00000,-1.00000'/>
 			<FIELD type='0' description='Name' value='R4' show='1' pos='-8.00000,-4.00000'/>
@@ -889,7 +1068,7 @@ download the executable.-->
 		<WIRE a='118.00000,94.00000' b='122.00000,94.00000'/>
 		<SYMBOL id='6' pos='119.00000,120.00000' part='0' rotate='2' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
 			<FIELD type='1' description='Ref' value='D1' show='0' pos='-10.00000,4.40000'/>
-			<FIELD type='0' description='Name' value='LED' show='1' pos='-10.00000,-12.00000'/>
+			<FIELD type='0' description='Name' value='LED_ARMED_HOME' show='1' pos='-13.00000,-12.00000'/>
 			<FIELD type='1' description='Package' value='' show='0' pos='-10.00000,6.80000'/>
 			<FIELD type='1' description='Vf' value='..' show='0' pos='-10.00000,9.20000'/>
 			<FIELD type='1' description='If' value='..' show='0' pos='-10.00000,11.60000'/>
@@ -902,7 +1081,7 @@ download the executable.-->
 			<FIELD type='1' description='Mouser Part' value='..' show='0' pos='-10.00000,26.00000'/>
 			<FIELD type='1' description='Cost' value='..' show='0' pos='-10.00000,28.40000'/>
 		</SYMBOL>
-		<POWER pos='95.00000,112.00000' which='0' direction='2'>IO</POWER>
+		<POWER pos='95.00000,112.00000' which='0' direction='2'>IO-18</POWER>
 		<SYMBOL id='5' pos='108.00000,114.00000' part='0' rotate='2' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
 			<FIELD type='0' description='Ref' value='100' show='1' pos='-7.00000,-1.00000'/>
 			<FIELD type='0' description='Name' value='R4' show='1' pos='-8.00000,-4.00000'/>
@@ -913,7 +1092,7 @@ download the executable.-->
 		<WIRE a='118.00000,112.00000' b='122.00000,112.00000'/>
 		<SYMBOL id='6' pos='119.00000,138.00000' part='0' rotate='2' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
 			<FIELD type='1' description='Ref' value='D1' show='0' pos='-10.00000,4.40000'/>
-			<FIELD type='0' description='Name' value='LED' show='1' pos='-10.00000,-12.00000'/>
+			<FIELD type='0' description='Name' value='LED_ARMED_AWAY' show='1' pos='-16.00000,-12.00000'/>
 			<FIELD type='1' description='Package' value='' show='0' pos='-10.00000,6.80000'/>
 			<FIELD type='1' description='Vf' value='..' show='0' pos='-10.00000,9.20000'/>
 			<FIELD type='1' description='If' value='..' show='0' pos='-10.00000,11.60000'/>
@@ -926,7 +1105,7 @@ download the executable.-->
 			<FIELD type='1' description='Mouser Part' value='..' show='0' pos='-10.00000,26.00000'/>
 			<FIELD type='1' description='Cost' value='..' show='0' pos='-10.00000,28.40000'/>
 		</SYMBOL>
-		<POWER pos='95.00000,130.00000' which='0' direction='2'>IO</POWER>
+		<POWER pos='95.00000,130.00000' which='0' direction='2'>IO-17</POWER>
 		<SYMBOL id='5' pos='108.00000,132.00000' part='0' rotate='2' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
 			<FIELD type='0' description='Ref' value='100' show='1' pos='-7.00000,-1.00000'/>
 			<FIELD type='0' description='Name' value='R4' show='1' pos='-8.00000,-4.00000'/>
@@ -935,25 +1114,25 @@ download the executable.-->
 		<WIRE a='95.00000,130.00000' b='98.00000,130.00000'/>
 		<WIRE a='106.00000,130.00000' b='109.00000,130.00000'/>
 		<WIRE a='118.00000,130.00000' b='122.00000,130.00000'/>
-		<LABEL pos='228.00000,183.00000' direction='3' font='3' color='208000' style='0'>RFIDPAD</LABEL>
-		<LABEL pos='229.00000,193.00000' direction='3' font='3' color='208000' style='0'>Jan-Pascal van Best &lt;janpascal@vanbest.org&gt;</LABEL>
-		<LABEL pos='253.00000,208.00000' direction='3' font='3' color='208000' style='0'>12 sept 2020</LABEL>
+		<LABEL pos='228.00000,183.00000' direction='3' font='4' color='208000' style='0'>RFIDPAD</LABEL>
+		<LABEL pos='229.00000,193.00000' direction='3' font='4' color='208000' style='0'>Jan-Pascal van Best &lt;janpascal@vanbest.org&gt;</LABEL>
+		<LABEL pos='253.00000,208.00000' direction='3' font='4' color='208000' style='0'>12 sept 2020</LABEL>
 		<JUNCTION pos='91.00000,32.00000'/>
 		<JUNCTION pos='91.00000,50.00000'/>
 		<JUNCTION pos='111.00000,32.00000'/>
 		<JUNCTION pos='111.00000,50.00000'/>
 		<JUNCTION pos='111.00000,68.00000'/>
-		<RECTANGLE a='236.00000,67.00000' b='287.00000,118.00000' style='5' fill='0'/>
-		<TEXT pos='239.00000,115.00000' direction='3' font='3' color='000000'>GND</TEXT>
-		<TEXT pos='240.00000,76.00000' direction='3' font='3' color='000000'>Vcc</TEXT>
-		<TEXT pos='241.00000,89.00000' direction='3' font='3' color='000000'>SDA</TEXT>
-		<TEXT pos='241.00000,102.00000' direction='3' font='3' color='000000'>SCL</TEXT>
-		<SYMBOL id='10' pos='219.00000,86.00000' part='0' rotate='0' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+		<RECTANGLE a='236.00000,67.00000' b='287.00000,118.00000' style='7' fill='0'/>
+		<TEXT pos='239.00000,115.00000' direction='3' font='4' color='000000'>GND</TEXT>
+		<TEXT pos='240.00000,76.00000' direction='3' font='4' color='000000'>Vcc</TEXT>
+		<TEXT pos='241.00000,89.00000' direction='3' font='4' color='000000'>SDA</TEXT>
+		<TEXT pos='241.00000,102.00000' direction='3' font='4' color='000000'>SCL</TEXT>
+		<SYMBOL id='9' pos='219.00000,86.00000' part='0' rotate='0' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
 			<FIELD type='0' description='Ref' value='3k3' show='1' pos='1.00000,-5.60000'/>
 			<FIELD type='0' description='Name' value='R7' show='1' pos='1.00000,-8.00000'/>
 		</SYMBOL>
 		<WIRE a='217.00000,74.00000' b='199.00000,74.00000'/>
-		<SYMBOL id='8' pos='231.00000,99.00000' part='0' rotate='0' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+		<SYMBOL id='7' pos='231.00000,99.00000' part='0' rotate='0' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
 			<FIELD type='0' description='Ref' value='3k3' show='1' pos='1.00000,-5.60000'/>
 			<FIELD type='0' description='Name' value='R8' show='1' pos='1.00000,-8.00000'/>
 		</SYMBOL>
@@ -961,15 +1140,15 @@ download the executable.-->
 		<WIRE a='239.00000,101.00000' b='229.00000,101.00000'/>
 		<WIRE a='229.00000,89.00000' b='229.00000,74.00000'/>
 		<WIRE a='238.00000,74.00000' b='229.00000,74.00000'/>
-		<TEXT pos='258.00000,94.00000' direction='3' font='3' color='000000'>Elechouse PN532</TEXT>
+		<TEXT pos='258.00000,94.00000' direction='3' font='4' color='000000'>Elechouse PN532</TEXT>
 		<WIRE a='199.00000,63.00000' b='199.00000,74.00000'/>
-		<SYMBOL id='9' pos='171.00000,49.00000' part='0' rotate='0' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+		<SYMBOL id='8' pos='171.00000,49.00000' part='0' rotate='0' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
 			<FIELD type='0' description='Ref' value='10k' show='1' pos='1.00000,-5.60000'/>
 			<FIELD type='0' description='Name' value='R10' show='1' pos='1.00000,-8.00000'/>
 		</SYMBOL>
 		<WIRE a='193.00000,55.00000' b='187.00000,55.00000'/>
 		<WIRE a='199.00000,51.00000' b='199.00000,30.00000'/>
-		<SYMBOL id='11' pos='189.00000,57.00000' part='0' rotate='2' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+		<SYMBOL id='10' pos='189.00000,57.00000' part='0' rotate='2' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
 			<FIELD type='0' description='Ref' value='100' show='1' pos='-9.00000,2.00000'/>
 			<FIELD type='0' description='Name' value='R9' show='1' pos='-9.00000,-4.00000'/>
 		</SYMBOL>
@@ -977,7 +1156,7 @@ download the executable.-->
 		<WIRE a='229.00000,74.00000' b='217.00000,74.00000'/>
 		<WIRE a='217.00000,84.00000' b='217.00000,87.00000'/>
 		<WIRE a='239.00000,87.00000' b='217.00000,87.00000'/>
-		<SYMBOL id='12' pos='201.00000,63.00000' part='0' rotate='1' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+		<SYMBOL id='11' pos='201.00000,63.00000' part='0' rotate='1' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
 			<FIELD type='1' description='Ref' value='NDP6020P ' show='1' pos='1.00000,-7.60000'/>
 			<FIELD type='0' description='Name' value='FET1' show='1' pos='1.00000,-10.00000'/>
 			<FIELD type='1' description='Package' value='' show='0' pos='1.00000,-5.20000'/>
@@ -1006,17 +1185,18 @@ download the executable.-->
 		<WIRE a='237.00000,114.00000' b='152.00000,114.00000'/>
 		<POWER pos='152.00000,114.00000' which='0' direction='2'>GND</POWER>
 		<POWER pos='155.00000,30.00000' which='0' direction='2'>V3.3</POWER>
-		<POWER pos='155.00000,55.00000' which='0' direction='2'>IO-35</POWER>
+		<POWER pos='155.00000,55.00000' which='0' direction='2'>IO-2</POWER>
 		<POWER pos='153.00000,87.00000' which='0' direction='2'>IO-32</POWER>
 		<POWER pos='153.00000,101.00000' which='0' direction='2'>IO-33</POWER>
-		<TEXT pos='197.00000,51.00000' direction='3' font='0' color='000000'>S</TEXT>
-		<TEXT pos='191.00000,58.00000' direction='3' font='0' color='000000'>G</TEXT>
-		<TEXT pos='200.00000,64.00000' direction='3' font='0' color='000000'>D</TEXT>
+		<TEXT pos='197.00000,51.00000' direction='3' font='3' color='000000'>S</TEXT>
+		<TEXT pos='191.00000,58.00000' direction='3' font='3' color='000000'>G</TEXT>
+		<TEXT pos='200.00000,64.00000' direction='3' font='3' color='000000'>D</TEXT>
 		<WIRE a='169.00000,39.00000' b='169.00000,30.00000'/>
 		<JUNCTION pos='169.00000,30.00000'/>
 		<WIRE a='199.00000,30.00000' b='169.00000,30.00000'/>
 		<WIRE a='169.00000,47.00000' b='169.00000,55.00000'/>
 		<JUNCTION pos='169.00000,55.00000'/>
 		<WIRE a='179.00000,55.00000' b='169.00000,55.00000'/>
+		<METAFILE a='246.00000,31.00000' b='266.00000,51.00000' id='1'/>
 	</TinyCAD>
 </TinyCADSheets>
