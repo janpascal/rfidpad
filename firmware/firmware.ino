@@ -37,22 +37,26 @@
 #define DBG_OUTPUT_PORT Serial
 #include <SPIFFS.h>
 
-
-#define LED_RED_PIN 16
-#define LED_GREEN_PIN 17
-#define LED_BLUE_PIN 18
-
 // I2C pins
 #define PIN_SDA (32)
 #define PIN_SCL (33)
 
+// Pushbutton pins
 #define PIN_DISARM_BUTTON 27
-#define PIN_ARM_HOME_BUTTON 34
+#define PIN_ARM_HOME_BUTTON 13
 #define PIN_ARM_AWAY_BUTTON 35
 
+// LED pins
 #define PIN_DISARMED_LED 19
 #define PIN_ARMED_HOME_LED 18
 #define PIN_ARMED_AWAY_LED 17
+
+// FET pin
+#define PIN_ENABLE_PN532 4
+
+// Battery voltage divider pin
+#define PIN_BATTERY_DIVIDER 34
+
 
 // -- When CONFIG_PIN is pulled to ground on startup, the Thing will use the initial
 //      password to buld an AP. (E.g. in case of lost password)
@@ -64,7 +68,7 @@
 //      when connected to the Wifi it will turn off (kept HIGH).
 #define STATUS_PIN -1
 
-#define NORMAL_WAKE_TIME 5000
+#define NORMAL_WAKE_TIME 10000
 #define CONFIG_WAKE_TIME 60000
 
 enum requested_state_t {
@@ -87,11 +91,6 @@ enum state_t {
   state_armed_away_pending,
   state_config                // CA certificate incomplete or double buttons pressed
 };
-
-// Calculated in enter_deep_sleep()
-// define BUTTON_PIN_BITMASK ( 0x8000000 + 0x400000000 + 0x800000000 )
-
-#define VBAT_PIN 35
 
 // -- Initial name of the Thing. Used e.g. as SSID of the own Access Point.
 const char thingName[] = "keypad";
@@ -157,12 +156,13 @@ void setup()
   Serial.println("Starting up...");
 
   requested_state = get_requested_state();
-  if (requested_state = requested_state_config) current_state = state_config;
+  if (requested_state == requested_state_config) {
+    current_state = state_config;
+  } else {
+    current_state = state_unknown;
+  }
 
-  //pinMode(VBAT_PIN, INPUT);
-  //pinMode(LED_RED_PIN, OUTPUT);
-  //pinMode(LED_GREEN_PIN, OUTPUT);
-  //pinMode(LED_BLUE_PIN, OUTPUT);
+  if (PIN_BATTERY_DIVIDER > 0) pinMode(PIN_BATTERY_DIVIDER, INPUT);
 
   if (PIN_DISARMED_LED > 0) pinMode(PIN_DISARMED_LED, OUTPUT);
   if (PIN_ARMED_HOME_LED > 0) pinMode(PIN_ARMED_HOME_LED, OUTPUT);
@@ -171,7 +171,12 @@ void setup()
   pinMode(PIN_DISARM_BUTTON, INPUT);
   pinMode(PIN_ARM_HOME_BUTTON, INPUT);
   pinMode(PIN_ARM_AWAY_BUTTON, INPUT);
-  
+
+  if (PIN_ENABLE_PN532 > 0) {
+    pinMode(PIN_ENABLE_PN532, OUTPUT);
+    digitalWrite(PIN_ENABLE_PN532, LOW);
+  }
+
   // if (FORMAT_FILESYSTEM) SPIFFS.format();
   SPIFFS.begin();                           // Start the SPI Flash Files System
 
@@ -249,10 +254,7 @@ void setup()
   Serial.println("Setting up i2c...");
   if (!wire.begin(PIN_SDA, PIN_SCL)) {
     Serial.println("Failed to initialise i2c");
-    pinMode(PIN_SDA, INPUT); // needed because Wire.end() enables pullups, power Saving
-    pinMode(PIN_SCL, INPUT);
-    Serial.println("Halting...");
-    while (1) ;
+    enter_deep_sleep();
   }
 
   Serial.println("Beginning pn532_i2c...");
@@ -268,11 +270,8 @@ void setup()
   uint32_t versiondata = pn532.getFirmwareVersion();
   if (! versiondata) {
     Serial.println("Didn't find PN53x board, bailing out!");
-    //Serial.println("Nope, ignoring to see what happens...");
-    pinMode(PIN_SDA, INPUT); // needed because Wire.end() enables pullups, power Saving
-    pinMode(PIN_SCL, INPUT);
-    Serial.println("Halting...");
-    while (1); // halt
+    Serial.println("Nope, ignoring to see what happens...");
+    // enter_deep_sleep();
   }
 
   // Got ok data, print it out!
@@ -300,6 +299,7 @@ void setup()
 // call back
 void wifiConnected()
 {
+  Serial.println("Wifi is connected, signalling to start MQTT...");
   needMqttConnect = true;
 }
 
@@ -337,9 +337,11 @@ requested_state_t get_requested_state()
           return requested_state_unknown;
         }
         if (count == 1) {
+          Serial.printf("Woken up by single pin, wakeup reason %d\n", response);
           return response;
         }
         // Multiple buttons pressed on startup
+        Serial.printf("Woken up by multiple pins, wakeup reason %d\n", requested_state_config);
         return requested_state_config;
         break;
     case ESP_SLEEP_WAKEUP_TIMER : Serial.println("Wakeup caused by timer"); break;
@@ -369,6 +371,8 @@ void update_state_leds(state_t state, boolean force=false)
   if (now -lastBlinkMillis < 200 && !force) {
     return;
   }
+  // Serial.printf("Updating leds for state %d\n", state);
+  
   lastBlinkMillis = now;
 
   lastBlinkState = 1 - lastBlinkState;
@@ -426,6 +430,7 @@ void reconnect_mqtt()
 {
   if (needMqttConnect)
   {
+    Serial.println("Connecting to MQTT...");
     if (connectMqtt())
     {
       Serial.println("MQTT connected");
@@ -434,8 +439,12 @@ void reconnect_mqtt()
   }
   else if ((iotWebConf.getState() == IOTWEBCONF_STATE_ONLINE) && (!mqttClient.connected()))
   {
-    Serial.println("MQTT reconnect");
-    connectMqtt();
+    Serial.println("Reconnecting to MQTT...");
+    if (connectMqtt())
+    {
+      Serial.println("MQTT connected");
+      needMqttConnect = false;
+    }
   }
 }
 
@@ -447,10 +456,13 @@ void ping_mqtt()
   if (mqttClient.connected() && now - mqttLastMsgTimestamp > 2000) {
     mqttLastMsgTimestamp = now;
     ++lastMsg;
+    // First battery reading is unreliable
+    if (lastMsg == 1) return;
     char msg[MSG_BUFFER_SIZE];
-    snprintf (msg, MSG_BUFFER_SIZE, "hello world #%ld", lastMsg);
-    Serial.print("Publish message: ");
-    Serial.println(msg);
+    float battery_percentage = get_battery_percentage();
+    int percent = battery_percentage;
+    snprintf (msg, MSG_BUFFER_SIZE, "BAT %d%%", percent);
+    Serial.printf("Publish ping message: %s\n", msg);
     mqttClient.publish(mqtt_action_channel, msg);
   }
 }
@@ -461,13 +473,20 @@ void loop()
   iotWebConf.doLoop();
   mqttClient.loop();
 
+  // Serial.println("Checking to (re)connect MQTT...");
   reconnect_mqtt();
+  
+  // Serial.println("Pinging MQTT...");
   ping_mqtt();
 
+  //Serial.println("Handling nfc...");
   handle_nfc();
+  //Serial.println("Checking for pressed button...");
   update_requested_state_from_buttons();
+  //Serial.println("Updating state LEDs...");
   update_state_leds(current_state);
 
+  //Serial.println("Checking if we need to send an MQTT message...");
   if (mqtt_message_to_send[0] != 0 && mqttClient.connected())
   {    
     Serial.printf("Publishing %s to %s\n", mqtt_message_to_send, mqtt_action_channel); 
@@ -475,26 +494,45 @@ void loop()
     mqtt_message_to_send[0] = 0;
   }
 
+  //Serial.println("Checking if we need to shut down...");
   if (current_state != state_config && millis() - last_state_change > NORMAL_WAKE_TIME) {
-    Serial.printf("Been awake without action for more than %s ms, going to deep sleep...\n", millis() - last_state_change);
-    enter_deep_sleep();
-  }
-  if (current_state == state_config && millis() - last_state_change > CONFIG_WAKE_TIME) {
-    Serial.printf("In Config mode, but awake without action for more than %s ms, going to deep sleep...\n", millis() - last_state_change);
+    int awake_time = millis() - last_state_change;
+    Serial.printf("Been awake without action for more than %d ms, going to deep sleep...\n", millis() - last_state_change);
+    mqttClient.publish(mqtt_action_channel, "Going to sleep");
     enter_deep_sleep();
   }
 
+  //Serial.println("Checking if we need to shut down in config mode...");
+  if (current_state == state_config && millis() - last_state_change > CONFIG_WAKE_TIME) {
+    Serial.printf("In Config mode, but awake without action for more than %d ms, going to deep sleep...\n", millis() - last_state_change);
+    enter_deep_sleep();
+  }
+
+  //Serial.println("Waiting 50ms...");
   delay(50);
 }
 
 void enter_deep_sleep()
 {
-  //Serial.println("Preparing for deep sleep:");
-  //Serial.println("* Shutting down Wifi");
+  Serial.println("Preparing for deep sleep:");
+  
+  Serial.println("* Shutting down Wifi");
+  WiFi.disconnect(true);
+  WiFi.mode(WIFI_OFF);
 
-  // Serial.println("* Turning off PN532");
-  // No use, led stays on anyways. Kill the power (using a FET?) instead!
+  Serial.println("* Turning off I2C");
+  wire.~TwoWire();
+  pinMode(PIN_SDA, INPUT);
+  pinMode(PIN_SCL, INPUT);
+
+  Serial.println("* Turning off PN532");
+  // No use, led stays on anyways. Kill the power (using a FET) instead!
   // pn532.shutDown(0x80, false); // 0x80: wake up on I2C
+
+  if (PIN_ENABLE_PN532 > 0) {
+    digitalWrite(PIN_ENABLE_PN532, HIGH);
+    pinMode(PIN_ENABLE_PN532, INPUT);
+  }
 
   Serial.println("Entering deep sleep until woken by button...");
   uint64_t mask = ( 1ULL << PIN_DISARM_BUTTON ) | ( 1ULL << PIN_ARM_HOME_BUTTON ) | ( 1ULL << PIN_ARM_AWAY_BUTTON );
@@ -540,6 +578,7 @@ void handle_nfc()
     }
 
     strncpy(mqtt_message_to_send, msg, sizeof(mqtt_message_to_send));
+    Serial.printf("Queueing message to send: '%s'\n", mqtt_message_to_send);
 
     if (requested_state == requested_state_disarm_button) set_state(state_disarmed_pending);
     if (requested_state == requested_state_arm_home_button) set_state(state_armed_home_pending);
@@ -550,21 +589,23 @@ void handle_nfc()
 
 float get_battery_percentage()
 {
-  float average = 0;
+    int raw = analogRead(PIN_BATTERY_DIVIDER);
+    // Serial.printf("Raw value: %d\n", raw);
+    
+    // 3.3 is full scale (4095); assume linear measurement
+    float measured_voltage = 3.30f * float(raw) / 4095.0f;
+    // Serial.print("Measured value: "); Serial.print(measured_voltage, 2); Serial.println(" V");
+    
+    // Compensate for voltage divider (470k/470k)
+    float Vbat = (940.0f/470.0f) * measured_voltage;
 
-  for (int i = 0; i < 10; ++i) {
-    float VBATMV = (float)(analogRead(VBAT_PIN)) * 3600 / 4095 * 2;
-    float VBATV = VBATMV / 1000;
     // 100% is 4.2V
     // each 1% down, 5.14mV = 0.00514V
     // so empty = 4.2V - 0.514V = 3.686V
     // According to spec: max 4.2V, min 2.75V, nominal 3.63V
-    float battery_percentage = (VBATV - 3.686) / 0.514 * 100;
+    float battery_percentage = (Vbat - 3.686) / 0.514 * 100;
 
-    average += battery_percentage / 10;
-  }
-
-  return average;
+    return battery_percentage;
 }
 
 boolean connectMqtt() {
@@ -604,7 +645,7 @@ void handleRoot()
     Serial.println("Connection had been handled by captive portal");
     return;
   }
-  //float battery_percentage = get_battery_percentage();
+  float battery_percentage = get_battery_percentage();
   String s = "<!DOCTYPE html><html lang=\"en\"><head><meta name=\"viewport\" content=\"width=device-width, initial-scale=1, user-scalable=no\"/>";
   s += "<title>IotWebConf based keypad</title></head><body><p>Hello world!</p>";
   s += "<p>Go to <a href='config'>configure page</a> to change values.</p>";
@@ -612,9 +653,9 @@ void handleRoot()
   s += "  <input type=\"file\" name=\"name\">";
   s += "  <input class=\"button\" type=\"submit\" value=\"Upload\">";
   s += "</form>";
-  //  s += "</p>Battery level: ";
-  //  s += battery_percentage;
-  //  s += "%</p>";
+  s += "</p>Battery level: ";
+  s += battery_percentage;
+  s += "%</p>";
   
   s += "</body></html>\n";
 
