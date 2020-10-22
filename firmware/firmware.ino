@@ -68,8 +68,11 @@
 //      when connected to the Wifi it will turn off (kept HIGH).
 #define STATUS_PIN -1
 
+// Stay awake for 10 seconds during normal operations
 #define NORMAL_WAKE_TIME 10000
-#define CONFIG_WAKE_TIME 60000
+
+// Stay away for 10 minutes when multiple buttons were pressed during startup
+#define CONFIG_WAKE_TIME 600000
 
 enum requested_state_t {
   requested_state_unknown,
@@ -98,16 +101,20 @@ const char thingName[] = "keypad";
 // -- Initial password to connect to the Thing, when it creates an own Access Point.
 const char wifiInitialApPassword[] = "pad323232";
 
+const char component_name[] = "binary_sensor"; // "rfidpad";
+const char action_topic_name[] = "action";
+const char state_topic_name[] = "state";
+const char config_topic_name[] = "config";
+const char battery_level_topic_name[] = "bat";
+
 const char* caFilename = "/ca.crt";
 
-#define STRING_LEN 128
-#define NUMBER_LEN 32
-
 // -- Configuration specific key. The value should be modified if config structure was changed.
-#define CONFIG_VERSION "key8"
+#define CONFIG_VERSION "rfidpad_v1"
 
 #define STRING_LEN 128
 #define PORT_LEN 5
+#define MAX_TOPIC_LEN 256
 
 // -- Callback method declarations.
 void configSaved();
@@ -127,12 +134,14 @@ char mqttServerValue[STRING_LEN];
 char mqttServerPortValue[PORT_LEN];
 char mqttUserNameValue[STRING_LEN];
 char mqttUserPasswordValue[STRING_LEN];
+char mqttTopicPrefixValue[STRING_LEN];
 
 IotWebConf iotWebConf(thingName, &dnsServer, &server, wifiInitialApPassword, CONFIG_VERSION);
 IotWebConfParameter mqttServerParam = IotWebConfParameter("MQTT server", "mqttServer", mqttServerValue, STRING_LEN, "text", NULL, "bree.vanbest.eu");
 IotWebConfParameter mqttServerPortParam = IotWebConfParameter("MQTT port", "mqttPort", mqttServerPortValue, PORT_LEN, "text", NULL, "1883"); // , "1883 for MQTT, 8883 for MQTTS");
 IotWebConfParameter mqttUserNameParam = IotWebConfParameter("MQTT user", "mqttUser", mqttUserNameValue, STRING_LEN, "text", NULL, "keypad");
 IotWebConfParameter mqttUserPasswordParam = IotWebConfParameter("MQTT password", "mqttPass", mqttUserPasswordValue, STRING_LEN, "password", NULL, "aeSheeciingeib6G");
+IotWebConfParameter mqttTopicPrefixParam = IotWebConfParameter("MQTT prefix", "mqttPrefix", mqttTopicPrefixValue, STRING_LEN, "text", NULL, "homeassistant");
 // -- We can add a legend to the separator
 //IotWebConfSeparator separator2 = IotWebConfSeparator("Calibration factor");
 
@@ -141,8 +150,12 @@ unsigned long lastMqttConnectionAttempt = 0;
 static int current_led = 0;
 unsigned long lastMsg = 0;
 unsigned long mqttLastMsgTimestamp = 0;
-char mqtt_status_channel[] = "rfidpad/status";
-char mqtt_action_channel[] = "rfidpad/action";
+
+// Overwritten at startup
+char mqtt_status_channel[MAX_TOPIC_LEN] = "rfidpad/status";
+char mqtt_action_channel[MAX_TOPIC_LEN] = "rfidpad/action";
+char mqtt_config_channel[MAX_TOPIC_LEN] = "rfidpad/config";
+char mqtt_bat_channel[MAX_TOPIC_LEN] = "rfidpad/bat";
 
 requested_state_t requested_state = requested_state_unknown;
 state_t current_state = state_unknown;
@@ -154,13 +167,6 @@ void setup()
   Serial.begin(115200);
   Serial.println();
   Serial.println("Starting up...");
-
-  requested_state = get_requested_state();
-  if (requested_state == requested_state_config) {
-    current_state = state_config;
-  } else {
-    current_state = state_unknown;
-  }
 
   if (PIN_BATTERY_DIVIDER > 0) pinMode(PIN_BATTERY_DIVIDER, INPUT);
 
@@ -177,6 +183,14 @@ void setup()
     digitalWrite(PIN_ENABLE_PN532, LOW);
   }
 
+  requested_state = get_requested_state();
+  if (requested_state == requested_state_config) {
+    current_state = state_config;
+  } else {
+    current_state = state_unknown;
+  }
+
+
   // if (FORMAT_FILESYSTEM) SPIFFS.format();
   SPIFFS.begin();                           // Start the SPI Flash Files System
 
@@ -185,10 +199,9 @@ void setup()
 
   iotWebConf.addParameter(&mqttServerParam);
   iotWebConf.addParameter(&mqttServerPortParam);
-  //iotWebConf.addParameter(&mqttServerCaCertParam);
-
   iotWebConf.addParameter(&mqttUserNameParam);
   iotWebConf.addParameter(&mqttUserPasswordParam);
+  iotWebConf.addParameter(&mqttTopicPrefixParam);
 
   iotWebConf.setConfigSavedCallback(&configSaved);
   iotWebConf.setFormValidator(&formValidator);
@@ -206,6 +219,7 @@ void setup()
     strncpy(mqttServerPortValue, mqttServerPortParam.defaultValue, PORT_LEN);
     strncpy(mqttUserNameValue, mqttUserNameParam.defaultValue, STRING_LEN);
     strncpy(mqttUserPasswordValue, mqttUserPasswordParam.defaultValue, STRING_LEN);
+    strncpy(mqttTopicPrefixValue, mqttTopicPrefixParam.defaultValue, STRING_LEN);
   }
 
   Serial.println("Setting ca certificate to connection to MQTT server");
@@ -234,9 +248,18 @@ void setup()
   Serial.println(pw);
 
   IotWebConfParameter* thing_name_param = iotWebConf.getThingNameParameter();
-  char* name = thing_name_param->valueBuffer;
-  Serial.print("Config name: ");
-  Serial.println(name);
+  char* thing_name = thing_name_param->valueBuffer;
+  Serial.printf("Config name: %s\n", thing_name);
+
+  Serial.println("Setting up MQTT topic names...");
+  snprintf(mqtt_status_channel, MAX_TOPIC_LEN, "%s/%s/%s/%s", mqttTopicPrefixValue, component_name, thing_name, state_topic_name);
+  snprintf(mqtt_action_channel, MAX_TOPIC_LEN, "%s/%s/%s/%s", mqttTopicPrefixValue, component_name, thing_name, action_topic_name);
+  snprintf(mqtt_config_channel, MAX_TOPIC_LEN, "%s/%s/%s/%s", mqttTopicPrefixValue, component_name, thing_name, config_topic_name);
+  snprintf(mqtt_bat_channel,    MAX_TOPIC_LEN, "%s/%s/%s/%s", mqttTopicPrefixValue, component_name, thing_name, battery_level_topic_name);
+  Serial.printf("* status topic: %s\n", mqtt_status_channel);
+  Serial.printf("* action topic: %s\n", mqtt_action_channel);
+  Serial.printf("* config topic: %s\n", mqtt_config_channel);
+  Serial.printf("* battery level topic: %s\n", mqtt_bat_channel);
 
   // -- Set up required URL handlers on the web server.
   server.on("/", handleRoot);
@@ -248,6 +271,7 @@ void setup()
   server.onNotFound([]() {
     iotWebConf.handleNotFound();
   });
+
 
   mqttClient.setCallback(mqttMessageReceived);
 
@@ -319,7 +343,19 @@ requested_state_t get_requested_state()
         Serial.println("Wakeup caused by external signal using RTC_CNTL"); 
         bitmask = esp_sleep_get_ext1_wakeup_status();
         Serial.printf("Wake up trigger bitmask: %016llx\n", bitmask);
-        
+        if (digitalRead(PIN_DISARM_BUTTON) == HIGH) {
+          response = requested_state_disarm_button;
+          count++;
+        }
+        if (digitalRead(PIN_ARM_HOME_BUTTON) == HIGH) {
+          response = requested_state_arm_home_button;
+          count++;
+        }
+        if (digitalRead(PIN_ARM_AWAY_BUTTON) == HIGH) {
+          response = requested_state_arm_away_button;
+          count++;
+        }
+        /*
         if (bitmask & (1ULL << PIN_DISARM_BUTTON)) {
           response = requested_state_disarm_button;
           count++;
@@ -332,6 +368,7 @@ requested_state_t get_requested_state()
             response = requested_state_arm_away_button;
             count++;
         } 
+        */
         if (count == 0) {
           Serial.println("Woken up by unknown pin");
           return requested_state_unknown;
@@ -621,14 +658,20 @@ boolean connectMqtt() {
     lastMqttConnectionAttempt = now;
     return false;
   }
-  Serial.println("Connected!");
+  Serial.println("MQTT Connected!");
 
-  Serial.println("Subscribing to mqtt test/action");
+  Serial.printf("Subscribing to mqtt %s\n", mqtt_status_channel);
   mqttClient.subscribe(mqtt_status_channel);
 
-  Serial.println("Sending hello_world to mqtt test/status");
+  Serial.printf("Sending hello_world to mqtt %s\n", mqtt_action_channel);
   mqttClient.publish(mqtt_action_channel, "Hello world from esp32");
 
+  Serial.printf("Sending home assistant configuration to %s\n", mqtt_config_channel);
+  char msg[1024];
+  snprintf(msg, 1024, "{\"name\": \"%s\", \"device_class\": \"motion\", \"action_topic\": \"%s\", \"state_topic\": \"%s\", \"battery_level_topic\": \"%s\"}", 
+     /*device_name*/ "rfidpad", mqtt_action_channel, mqtt_status_channel, mqtt_bat_channel);
+  Serial.printf("Config: %s\n", msg);
+  mqttClient.publish(mqtt_config_channel, msg);
   return true;
 }
 
