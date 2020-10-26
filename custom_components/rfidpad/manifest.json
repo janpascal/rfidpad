@@ -1,0 +1,16 @@
+{
+  "domain": "rfidpad",
+  "name": "RFID Access Pad",
+  "documentation": "https://github.com/janpascal/rfidpad",
+  "issue_tracker": "https://github.com/janpascal/rfidpad/issues",
+  "dependencies": ["mqtt"],
+  "config_flow": true,
+  "codeowners": [
+    "@janpascal"
+  ],
+  "requirements": [
+  ],
+  "mqtt": [
+     "rfidpad/discovery/#"
+  ]
+}
