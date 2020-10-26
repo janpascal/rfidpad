@@ -11,6 +11,6 @@
   "requirements": [
   ],
   "mqtt": [
-     "rfidpad/discovery/#"
+     "homeassistant/rfidpad/#/config"
   ]
 }
