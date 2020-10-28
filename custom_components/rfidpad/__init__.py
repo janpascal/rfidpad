@@ -8,14 +8,16 @@ import asyncio
 from datetime import timedelta
 import logging
 
+from homeassistant.components import mqtt
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.core import Config, HomeAssistant
+from homeassistant.core import Config, HomeAssistant, callback
 from homeassistant.exceptions import ConfigEntryNotReady
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
 from custom_components.rfidpad.const import (
     CONF_PASSWORD,
     CONF_USERNAME,
+    CONF_MQTT_PREFIX,
     DOMAIN,
     PLATFORMS,
     STARTUP_MESSAGE,
@@ -28,8 +30,15 @@ _LOGGER = logging.getLogger(__name__)
 
 async def async_setup(hass: HomeAssistant, config: Config):
     """Set up this integration using YAML is not supported."""
+    if "mqtt" not in hass.config.components:
+        _LOGGER.error("MQTT integration is not set up")
+        return False
+    hass.data[DOMAIN] = {}
     return True
 
+@callback
+def async_receive_discovery(msg):
+    _LOGGER.info(f"Received discovery message: {msg}")
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
     """Set up this integration using UI."""
@@ -37,9 +46,14 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
         hass.data.setdefault(DOMAIN, {})
         _LOGGER.info(STARTUP_MESSAGE)
 
+        
     _LOGGER.info("async_setup_entry with config: {}".format(entry))
-    username = entry.data.get(CONF_USERNAME)
-    password = entry.data.get(CONF_PASSWORD)
+
+    mqtt_prefix = entry.data.get(CONF_MQTT_PREFIX)
+    await mqtt.async_subscribe(
+                            hass, f"{mqtt_prefix}/discovery#", async_receive_discovery)
+
+
 
 ##    coordinator = BlueprintDataUpdateCoordinator(
 ##        hass, username=username, password=password
