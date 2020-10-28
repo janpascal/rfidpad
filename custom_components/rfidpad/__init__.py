@@ -50,6 +50,8 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
     _LOGGER.info("async_setup_entry with config: {}".format(entry))
 
     mqtt_prefix = entry.data.get(CONF_MQTT_PREFIX)
+    topic_filter = f"{mqtt_prefix}/discovery/#"
+    _LOGGER.info(f"Subscribing to MQTT filter {topic_filter}")
     await mqtt.async_subscribe(
                             hass, f"{mqtt_prefix}/discovery/#", async_receive_discovery)
 
