@@ -54,6 +54,7 @@ class RFIDPadOptionsFlowHandler(config_entries.OptionsFlow):
     def __init__(self, config_entry):
         """Initialize HACS options flow."""
         self.config_entry = config_entry
+        _LOGGER.info("Options init with {}".format(config_entry))
         self.options = dict(config_entry.options)
 
     async def async_step_init(self, user_input=None):  # pylint: disable=unused-argument
@@ -62,6 +63,7 @@ class RFIDPadOptionsFlowHandler(config_entries.OptionsFlow):
 
     async def async_step_user(self, user_input=None):
         """Handle a flow initialized by the user."""
+        _LOGGER.info("Options step user with {}".format(user_input))
         if user_input is not None:
             self.options.update(user_input)
             return await self._update_options()
@@ -70,8 +72,7 @@ class RFIDPadOptionsFlowHandler(config_entries.OptionsFlow):
             step_id="user",
             data_schema=vol.Schema(
                 {
-                    vol.Required(x, default=self.options.get(x, True)): bool
-                    for x in sorted(PLATFORMS)
+                    vol.Optional(CONF_MQTT_PREFIX, default=self.options.get(CONF_MQTT_PREFIX, DEFAULT_MQTT_PREFIX)): str
                 }
             ),
         )
