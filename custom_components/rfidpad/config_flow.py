@@ -21,7 +21,7 @@ class RFIDPadConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
         # Only a single instance of the integration is allowed:
         if self._async_current_entries():
-            return self.async_abort(reason="single_instance_allowed"
+            return self.async_abort(reason="single_instance_allowed")
 
         if user_input is not None:
             return self.async_create_entry(
