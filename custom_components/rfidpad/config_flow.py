@@ -25,7 +25,7 @@ class RFIDPadConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
         if info is not None:
             return self.async_create_entry(
-                title=user_input[CONF_MQTT_PREFIX], data=user_input
+                title=info[CONF_MQTT_PREFIX], data=info
             )
 
         return self.async_show_form(
