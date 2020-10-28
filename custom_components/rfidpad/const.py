@@ -28,6 +28,7 @@ CONF_MQTT_PREFIX = "MQTT prefix"
 
 # Defaults
 DEFAULT_NAME = DOMAIN
+DEFAULT_MQTT_PREFIX = "rfidpad"
 
 
 STARTUP_MESSAGE = f"""

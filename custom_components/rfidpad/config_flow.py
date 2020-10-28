@@ -2,22 +2,34 @@ import logging
 
 from homeassistant import config_entries
 from homeassistant.core import callback
-from .const import ( DOMAIN, PLATFORMS, CONF_MQTT_PREFIX )
+from .const import ( 
+    DOMAIN, 
+    PLATFORMS, 
+    CONF_MQTT_PREFIX, 
+    DEFAULT_MQTT_PREFIX 
+)
+
 
 import voluptuous as vol
 
 _LOGGER = logging.getLogger(__name__)
 
+@config_entries.HANDLERS.register(DOMAIN)
 class RFIDPadConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     async def async_step_user(self, info):
         _LOGGER.info("async_step_user: " + str(info))
 
         # Only a single instance of the integration is allowed:
         if self._async_current_entries():
-            return self.async_abort(reason="single_instance_allowed")
+            return self.async_abort(reason="single_instance_allowed"
+
+        if user_input is not None:
+            return self.async_create_entry(
+                title=user_input[CONF_MQTT_PREFIX], data=user_input
+            )
 
         return self.async_show_form(
-            step_id="user", data_schema=vol.Schema({vol.Required("MQTT topic prefix"): str})
+            step_id="user", data_schema=vol.Schema({vol.Optional(CONF_MQTT_PREFIX, default=DEFAULT_MQTT_PREFIX): str})
         )
 
 
