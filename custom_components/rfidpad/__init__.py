@@ -36,9 +36,8 @@ async def async_setup(hass: HomeAssistant, config: Config):
     hass.data[DOMAIN] = {}
     return True
 
-@callback
-def async_receive_discovery(msg):
-    _LOGGER.info(f"Received discovery message: {msg}")
+async def async_receive_discovery(topic, payload, qos):
+    _LOGGER.info(f"Received discovery message: {payload}")
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
     """Set up this integration using UI."""
