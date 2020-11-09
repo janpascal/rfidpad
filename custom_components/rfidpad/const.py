@@ -25,7 +25,7 @@ PLATFORMS = [SENSOR]
 CONF_ENABLED = "enabled"
 CONF_USERNAME = "username"
 CONF_PASSWORD = "password"
-CONF_MQTT_PREFIX = "MQTT prefix"
+CONF_MQTT_PREFIX = "mqtt_prefix"
 
 DEVICE_CONF_ID = "id"
 DEVICE_CONF_NAME = "name"

@@ -1,6 +1,7 @@
 import logging
 
 from homeassistant import config_entries
+from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import callback
 from .const import ( 
     DOMAIN, 
@@ -16,8 +17,10 @@ _LOGGER = logging.getLogger(__name__)
 
 @config_entries.HANDLERS.register(DOMAIN)
 class RFIDPadConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
+    VERSION = 2
+
     async def async_step_user(self, info):
-        _LOGGER.info("async_step_user: " + str(info))
+        _LOGGER.info(f"async_step_user: {info}")
 
         # Only a single instance of the integration is allowed:
         if self._async_current_entries():
@@ -31,16 +34,6 @@ class RFIDPadConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         return self.async_show_form(
             step_id="user", data_schema=vol.Schema({vol.Optional(CONF_MQTT_PREFIX, default=DEFAULT_MQTT_PREFIX): str})
         )
-
-
-    async def async_step_mqtt(self, info):
-        _LOGGER.info("async_step_mqtt: " + str(info))
-
-        return self.async_show_form(
-            step_id="mqtt", data_schema=vol.Schema({vol.Required("MQTT topic prefix"): str})
-        )
-
-
 
     @staticmethod
     @callback

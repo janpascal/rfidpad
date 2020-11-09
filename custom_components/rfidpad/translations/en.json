@@ -1,0 +1,31 @@
+{
+    "config": {
+        "title": "RFIDPad",
+        "step": {
+            "user": {
+                "title": "RFIDPad",
+                "description": "If you need help with the configuration have a look here: https://github.com/janpascal/rfidpad",
+                "data": {
+                    "mqtt_prefix": "MQTT topic prefix"
+                }
+            }
+        },
+        "error": {
+            "auth": "Username/Password is wrong."
+        },
+        "abort": {
+            "single_instance_allowed": "Only a single configuration of RFIDPad is allowed."
+        }
+    },
+    "options": {
+        "step": {
+            "user": {
+                "title": "RFIDPad",
+                "description": "If you need help with the configuration have a look here: https://github.com/janpascal/rfidpad",
+                "data": {
+                    "mqtt_prefix": "MQTT topic prefix"
+                }
+            }
+        }
+    }
+}

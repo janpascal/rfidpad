@@ -41,6 +41,7 @@ from .const import (
     DEFAULT_BATTERY_TOPIC,
 )
 
+from .config_flow import RFIDPadConfigFlow
 from .sensor import BatterySensor
 
 SCAN_INTERVAL = timedelta(seconds=30)
@@ -64,7 +65,10 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
 
         
     _LOGGER.info("async_setup_entry with entry: {}".format(entry))
-    _LOGGER.info(f"entry_id: {entry.entry_id}; data: {entry.data}")
+    _LOGGER.info(f"entry_id: {entry.entry_id}; version: {entry.version}; data: {entry.data}")
+
+#    if entry.version != RFIDPadConfigFlow.VERSION:
+#        await async_migrate_entry(hass, entry)
 
     mqtt_prefix = entry.data.get(CONF_MQTT_PREFIX)
     handler = RFIDPadHandler(hass, entry, mqtt_prefix)
@@ -79,6 +83,28 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
     #entry.add_update_listener(async_reload_entry)
     return True
 
+
+# Migration function
+async def async_migrate_entry(hass, config_entry: ConfigEntry):
+    """Migrate old entry."""
+    _LOGGER.debug("Migrating config_entry from version %s", config_entry.version)
+
+    if config_entry.version is None or config_entry.version == 1:
+
+        new = {**config_entry.data}
+
+        # modify config data, i.c. change config tag
+        if CONF_MQTT_PREFIX not in new:
+            new[CONF_MQTT_PREFIX] = new["MQTT prefix"]
+            del new["MQTT prefix"]
+
+        config_entry.data = {**new}
+
+        config_entry.version = 2
+
+    _LOGGER.info("Migration to version %s successful", config_entry.version)
+
+    return True
 
 ##
 ##async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry):
@@ -110,6 +136,7 @@ class RFIDPadHandler:
         self.config_entry = config_entry
         self.mqtt_prefix = mqtt_prefix
         self.async_add_devices = {}
+        self.devices = {}
 
     async def start_discovery(self):
         topic_filter = f"{self.mqtt_prefix}/discovery/#"
@@ -124,14 +151,15 @@ class RFIDPadHandler:
             config = json.loads(msg.payload)
         except:
             _LOGGER.info(f"Cannot parse rfidpad discovery message: {msg.payload}")
+            return
 
         pad = RFIDPad(self.hass, self, config)
-
-        await pad.start()
-
-    @property
-    def pads(self):
-        return [RFIDPad(), ]
+        if pad.id in self.devices:
+            _LOGGER.info(f"Ignoring RFIDPAD {pad.id} ({pad.name}), id already exists")
+            # TODO update device configuration and restart device
+        else:
+            self.devices[pad.id] = pad
+            await pad.start()
 
 class RFIDPad:
     def __init__(self, hass, handler, config):

@@ -41,6 +41,7 @@ class BatterySensor(Entity):
 
     def __init__(self, hass, device):
         """Initialize the sensor."""
+        _LOGGER.info(f"Battery sensor has hass: {hass}")
         self.hass = hass
         self._device = device
         self._state = None
