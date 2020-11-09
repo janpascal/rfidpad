@@ -6,22 +6,42 @@ https://github.com/janpascal/rfidpad
 """
 import asyncio
 from datetime import timedelta
+import json
 import logging
 
 from homeassistant.components import mqtt
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import Config, HomeAssistant, callback
 from homeassistant.exceptions import ConfigEntryNotReady
-from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
-from custom_components.rfidpad.const import (
+from .const import (
     CONF_PASSWORD,
     CONF_USERNAME,
     CONF_MQTT_PREFIX,
     DOMAIN,
+    BINARY_SENSOR,
+    SENSOR,
+    SWITCH,
     PLATFORMS,
     STARTUP_MESSAGE,
+    DEVICE_CONF_ID,
+    DEVICE_CONF_NAME,
+    DEVICE_CONF_MODEL,
+    DEVICE_CONF_MANUFACTURER,
+    DEVICE_CONF_SW_VERSION,
+    DEVICE_CONF_BASE_TOPIC,
+    DEVICE_CONF_ACTION_TOPIC,
+    DEVICE_CONF_STATUS_TOPIC,
+    DEVICE_CONF_BATTERY_TOPIC,
+    DEFAULT_MODEL,
+    DEFAULT_MANUFACTURER,
+    DEFAULT_SW_VERSION,
+    DEFAULT_STATUS_TOPIC,
+    DEFAULT_ACTION_TOPIC,
+    DEFAULT_BATTERY_TOPIC,
 )
+
+from .sensor import BatterySensor
 
 SCAN_INTERVAL = timedelta(seconds=30)
 
@@ -36,9 +56,6 @@ async def async_setup(hass: HomeAssistant, config: Config):
     hass.data[DOMAIN] = {}
     return True
 
-async def async_receive_discovery(topic, payload, qos):
-    _LOGGER.info(f"Received discovery message: {payload}")
-
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
     """Set up this integration using UI."""
     if hass.data.get(DOMAIN) is None:
@@ -46,54 +63,22 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
         _LOGGER.info(STARTUP_MESSAGE)
 
         
-    _LOGGER.info("async_setup_entry with config: {}".format(entry))
+    _LOGGER.info("async_setup_entry with entry: {}".format(entry))
+    _LOGGER.info(f"entry_id: {entry.entry_id}; data: {entry.data}")
 
     mqtt_prefix = entry.data.get(CONF_MQTT_PREFIX)
-    topic_filter = f"{mqtt_prefix}/discovery/#"
-    _LOGGER.info(f"Subscribing to MQTT filter {topic_filter}")
-    await mqtt.async_subscribe(
-                            hass, f"{mqtt_prefix}/discovery/#", async_receive_discovery)
+    handler = RFIDPadHandler(hass, entry, mqtt_prefix)
+    hass.data[DOMAIN][entry.entry_id] = handler
 
+    for platform in PLATFORMS:
+        #coordinator.platforms.append(platform)
+        hass.async_add_job(
+            hass.config_entries.async_forward_entry_setup(entry, platform)
+        )
 
-
-##    coordinator = BlueprintDataUpdateCoordinator(
-##        hass, username=username, password=password
-##    )
-##    await coordinator.async_refresh()
-##
-##    if not coordinator.last_update_success:
-##        raise ConfigEntryNotReady
-##
-##    hass.data[DOMAIN][entry.entry_id] = coordinator
-
-##    for platform in PLATFORMS:
-##        if entry.options.get(platform, True):
-##            coordinator.platforms.append(platform)
-##            hass.async_add_job(
-##                hass.config_entries.async_forward_entry_setup(entry, platform)
-##            )
-##
-##    entry.add_update_listener(async_reload_entry)
+    #entry.add_update_listener(async_reload_entry)
     return True
 
-
-##class BlueprintDataUpdateCoordinator(DataUpdateCoordinator):
-##    """Class to manage fetching data from the API."""
-##
-##    def __init__(self, hass, username, password):
-##        """Initialize."""
-##        self.api = Client(username, password)
-##        self.platforms = []
-##
-##        super().__init__(hass, _LOGGER, name=DOMAIN, update_interval=SCAN_INTERVAL)
-##
-##    async def _async_update_data(self):
-##        """Update data via library."""
-##        try:
-##            data = await self.api.async_get_data()
-##            return data.get("data", {})
-##        except Exception as exception:
-##            raise UpdateFailed(exception)
 
 ##
 ##async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry):
@@ -118,4 +103,101 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
 ##    """Reload config entry."""
 ##    await async_unload_entry(hass, entry)
 ##    await async_setup_entry(hass, entry)
+
+class RFIDPadHandler:
+    def __init__(self, hass, config_entry, mqtt_prefix):
+        self.hass = hass
+        self.config_entry = config_entry
+        self.mqtt_prefix = mqtt_prefix
+        self.async_add_devices = {}
+
+    async def start_discovery(self):
+        topic_filter = f"{self.mqtt_prefix}/discovery/#"
+        _LOGGER.info(f"Subscribing to MQTT filter {topic_filter}")
+        await mqtt.async_subscribe(self.hass, f"{self.mqtt_prefix}/discovery/#", self.async_receive_discovery)
+
+    async def async_receive_discovery(self, msg):
+        _LOGGER.info(f"Received discovery message: {msg} ({type(msg)})")
+        async_add_devices_sensor = self.async_add_devices[SENSOR]
+
+        try:
+            config = json.loads(msg.payload)
+        except:
+            _LOGGER.info(f"Cannot parse rfidpad discovery message: {msg.payload}")
+
+        pad = RFIDPad(self.hass, self, config)
+
+        await pad.start()
+
+    @property
+    def pads(self):
+        return [RFIDPad(), ]
+
+class RFIDPad:
+    def __init__(self, hass, handler, config):
+        self.hass = hass
+        self.handler = handler
+        self.id = config[DEVICE_CONF_ID]
+        self.name = config[DEVICE_CONF_NAME]
+        try:
+            self.model = config[DEVICE_CONF_MODEL]
+        except:
+            self.model = DEFAULT_MODEL
+
+        try:
+            self.manufacturer = config[DEVICE_CONF_MANUFACTURER]
+        except:
+            self.manufacturer = DEFAULT_MANUFACTURER
+
+        try:
+            self.sw_version = config[DEVICE_CONF_SW_VERSION]
+        except:
+            self.sw_version = "0.0"
+
+        try:
+            self.base_topic = config[DEVICE_CONF_BASE_TOPIC]
+        except:
+            self.base_topic = f"{self.handler.mqtt_prefix}/{self.id}"
+
+        try: 
+            self.status_topic = f"{self.base_topic}/{config[DEVICE_CONF_STATUS_TOPIC]}" 
+        except:
+            self.status_topic = f"{self.base_topic}/{DEFAULT_STATUS_TOPIC}" 
+
+        try: 
+            self.action_topic = f"{self.base_topic}/{config[DEVICE_CONF_ACTION_TOPIC]}" 
+        except:
+            self.action_topic = f"{self.base_topic}/{DEFAULT_ACTION_TOPIC}" 
+        try: 
+            self.battery_topic = f"{self.base_topic}/{config[DEVICE_CONF_BATTERY_TOPIC]}" 
+        except:
+            self.battery_topic = f"{self.base_topic}/{DEFAULT_BATTERY-TOPIC}" 
+
+        self.battery_level = None
+        self.battery_voltage = None
+
+    async def start(self):
+        _LOGGER.info(f"Subscribing to rfidpad action: {self.action_topic}")
+
+        self.battery_sensor = BatterySensor(self)
+        new_devices = [self.battery_sensor,]
+        _LOGGER.info(f"Adding {len(new_devices)} entities")
+        self.handler.async_add_devices[SENSOR](new_devices)
+
+        await mqtt.async_subscribe(self.hass, self.action_topic, self.async_receive_action)
+        await mqtt.async_subscribe(self.hass, self.battery_topic, self.async_receive_battery)
+
+    async def async_receive_action(self, msg):
+        _LOGGER.info(f"Received action message: {msg}")
+
+    async def async_receive_battery(self, msg):
+        _LOGGER.info(f"Received battery message: {msg}")
+        try:
+            message = json.loads(msg.payload)
+        except:
+            _LOGGER.info(f"Cannot parse rfidpad battery message: {msg.payload}")
+        self.battery_level = message["level"]
+        self.battery_voltage = message["voltage"]
+
+        await self.battery_sensor.async_update_ha_state()
 

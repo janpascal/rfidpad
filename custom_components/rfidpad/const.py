@@ -17,7 +17,8 @@ BINARY_SENSOR_DEVICE_CLASS = "connectivity"
 BINARY_SENSOR = "binary_sensor"
 SENSOR = "sensor"
 SWITCH = "switch"
-PLATFORMS = [BINARY_SENSOR, SENSOR, SWITCH]
+#PLATFORMS = [BINARY_SENSOR, SENSOR, SWITCH]
+PLATFORMS = [SENSOR]
 
 
 # Configuration and options
@@ -26,9 +27,26 @@ CONF_USERNAME = "username"
 CONF_PASSWORD = "password"
 CONF_MQTT_PREFIX = "MQTT prefix"
 
+DEVICE_CONF_ID = "id"
+DEVICE_CONF_NAME = "name"
+DEVICE_CONF_MODEL = "model"
+DEVICE_CONF_MANUFACTURER = "manufacturer"
+DEVICE_CONF_SW_VERSION = "sw_version"
+DEVICE_CONF_BASE_TOPIC = "base_topic"
+DEVICE_CONF_ACTION_TOPIC = "action_topic"
+DEVICE_CONF_STATUS_TOPIC = "status_topic"
+DEVICE_CONF_BATTERY_TOPIC = "battery_topic"
+
 # Defaults
 DEFAULT_NAME = DOMAIN
 DEFAULT_MQTT_PREFIX = "rfidpad"
+
+DEFAULT_MODEL = "RFIDPad"
+DEFAULT_MANUFACTURER = "Jan-Pascal van Best"
+DEFAULT_SW_VERSION = "0.0.1"
+DEFAULT_STATUS_TOPIC = "status"
+DEFAULT_ACTION_TOPIC = "action"
+DEFAULT_BATTERY_TOPIC = "battery"
 
 
 STARTUP_MESSAGE = f"""

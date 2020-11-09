@@ -9,8 +9,5 @@
     "@janpascal"
   ],
   "requirements": [
-  ],
-  "mqtt": [
-     "rfidpad/discovery/#"
   ]
 }
