@@ -39,8 +39,9 @@ async def async_setup_entry(hass, config_entry, async_add_devices):
 class BatterySensor(Entity):
     """Representation of a Sensor."""
 
-    def __init__(self, device):
+    def __init__(self, hass, device):
         """Initialize the sensor."""
+        self.hass = hass
         self._device = device
         self._state = None
 

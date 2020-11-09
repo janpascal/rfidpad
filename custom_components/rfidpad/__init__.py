@@ -171,7 +171,7 @@ class RFIDPad:
         try: 
             self.battery_topic = f"{self.base_topic}/{config[DEVICE_CONF_BATTERY_TOPIC]}" 
         except:
-            self.battery_topic = f"{self.base_topic}/{DEFAULT_BATTERY-TOPIC}" 
+            self.battery_topic = f"{self.base_topic}/{DEFAULT_BATTERY_TOPIC}" 
 
         self.battery_level = None
         self.battery_voltage = None
@@ -179,7 +179,7 @@ class RFIDPad:
     async def start(self):
         _LOGGER.info(f"Subscribing to rfidpad action: {self.action_topic}")
 
-        self.battery_sensor = BatterySensor(self)
+        self.battery_sensor = BatterySensor(self.hass, self)
         new_devices = [self.battery_sensor,]
         _LOGGER.info(f"Adding {len(new_devices)} entities")
         self.handler.async_add_devices[SENSOR](new_devices)
