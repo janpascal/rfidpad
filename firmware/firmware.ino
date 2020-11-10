@@ -26,6 +26,8 @@
 #include <WiFiClientSecure.h>
 #include <PubSubClient.h>
 #include <IotWebConf.h>
+#include <ArduinoJson.h>
+#include <esp_system.h>
 
 #define DEBUG
 #include <Wire.h>
@@ -101,10 +103,8 @@ const char thingName[] = "keypad";
 // -- Initial password to connect to the Thing, when it creates an own Access Point.
 const char wifiInitialApPassword[] = "pad323232";
 
-const char component_name[] = "binary_sensor"; // "rfidpad";
 const char action_topic_name[] = "action";
 const char state_topic_name[] = "state";
-const char config_topic_name[] = "config";
 const char battery_level_topic_name[] = "bat";
 
 const char* caFilename = "/ca.crt";
@@ -141,7 +141,7 @@ IotWebConfParameter mqttServerParam = IotWebConfParameter("MQTT server", "mqttSe
 IotWebConfParameter mqttServerPortParam = IotWebConfParameter("MQTT port", "mqttPort", mqttServerPortValue, PORT_LEN, "text", NULL, "1883"); // , "1883 for MQTT, 8883 for MQTTS");
 IotWebConfParameter mqttUserNameParam = IotWebConfParameter("MQTT user", "mqttUser", mqttUserNameValue, STRING_LEN, "text", NULL, "keypad");
 IotWebConfParameter mqttUserPasswordParam = IotWebConfParameter("MQTT password", "mqttPass", mqttUserPasswordValue, STRING_LEN, "password", NULL, "aeSheeciingeib6G");
-IotWebConfParameter mqttTopicPrefixParam = IotWebConfParameter("MQTT prefix", "mqttPrefix", mqttTopicPrefixValue, STRING_LEN, "text", NULL, "homeassistant");
+IotWebConfParameter mqttTopicPrefixParam = IotWebConfParameter("MQTT prefix", "mqttPrefix", mqttTopicPrefixValue, STRING_LEN, "text", NULL, "rfidpad");
 // -- We can add a legend to the separator
 //IotWebConfSeparator separator2 = IotWebConfSeparator("Calibration factor");
 
@@ -154,8 +154,10 @@ unsigned long mqttLastMsgTimestamp = 0;
 // Overwritten at startup
 char mqtt_status_channel[MAX_TOPIC_LEN] = "rfidpad/status";
 char mqtt_action_channel[MAX_TOPIC_LEN] = "rfidpad/action";
-char mqtt_config_channel[MAX_TOPIC_LEN] = "rfidpad/config";
+char mqtt_discovery_channel[MAX_TOPIC_LEN] = "rfidpad/discovery/000000000000";
 char mqtt_bat_channel[MAX_TOPIC_LEN] = "rfidpad/bat";
+char device_id[] = "000000000000";
+char device_name[STRING_LEN] = "<unknown>";
 
 requested_state_t requested_state = requested_state_unknown;
 state_t current_state = state_unknown;
@@ -248,17 +250,22 @@ void setup()
   Serial.println(pw);
 
   IotWebConfParameter* thing_name_param = iotWebConf.getThingNameParameter();
-  char* thing_name = thing_name_param->valueBuffer;
-  Serial.printf("Config name: %s\n", thing_name);
+  strncpy(device_name, thing_name_param->valueBuffer, sizeof(device_name));
+  device_name[sizeof(device_name)-1] = 0;
+  Serial.printf("Device name: %s\n", device_name);
 
+  Serial.printf("Fetching hardware id...\n");
+  fetch_device_id();
+  Serial.printf("Device ID: %s\n", device_id);
+  
   Serial.println("Setting up MQTT topic names...");
-  snprintf(mqtt_status_channel, MAX_TOPIC_LEN, "%s/%s/%s/%s", mqttTopicPrefixValue, component_name, thing_name, state_topic_name);
-  snprintf(mqtt_action_channel, MAX_TOPIC_LEN, "%s/%s/%s/%s", mqttTopicPrefixValue, component_name, thing_name, action_topic_name);
-  snprintf(mqtt_config_channel, MAX_TOPIC_LEN, "%s/%s/%s/%s", mqttTopicPrefixValue, component_name, thing_name, config_topic_name);
-  snprintf(mqtt_bat_channel,    MAX_TOPIC_LEN, "%s/%s/%s/%s", mqttTopicPrefixValue, component_name, thing_name, battery_level_topic_name);
+  snprintf(mqtt_status_channel, MAX_TOPIC_LEN, "%s/%s/%s", mqttTopicPrefixValue, device_id, state_topic_name);
+  snprintf(mqtt_action_channel, MAX_TOPIC_LEN, "%s/%s/%s", mqttTopicPrefixValue, device_id, action_topic_name);
+  snprintf(mqtt_discovery_channel, MAX_TOPIC_LEN, "%s/discovery/%s", mqttTopicPrefixValue, device_id);
+  snprintf(mqtt_bat_channel,    MAX_TOPIC_LEN, "%s/%s/%s", mqttTopicPrefixValue, device_id, battery_level_topic_name);
   Serial.printf("* status topic: %s\n", mqtt_status_channel);
   Serial.printf("* action topic: %s\n", mqtt_action_channel);
-  Serial.printf("* config topic: %s\n", mqtt_config_channel);
+  Serial.printf("* config topic: %s\n", mqtt_discovery_channel);
   Serial.printf("* battery level topic: %s\n", mqtt_bat_channel);
 
   // -- Set up required URL handlers on the web server.
@@ -318,6 +325,13 @@ void setup()
   wire.flush();
 
   Serial.println("Ready.");
+}
+
+void fetch_device_id() {
+  uint8_t baseMac[6];
+  // Get MAC address for WiFi station
+  esp_read_mac(baseMac, ESP_MAC_WIFI_STA);
+  snprintf(device_id, sizeof(device_id), "%02X%02X%02X%02X%02X%02X", baseMac[0], baseMac[1], baseMac[2], baseMac[3], baseMac[4], baseMac[5]);
 }
 
 // call back
@@ -487,7 +501,31 @@ void reconnect_mqtt()
 
 #define MSG_BUFFER_SIZE 50
 
-void ping_mqtt()
+float get_battery_percentage(float* voltage = 0)
+{
+    int raw = analogRead(PIN_BATTERY_DIVIDER);
+    // Serial.printf("Raw value: %d\n", raw);
+    
+    // 3.3 is full scale (4095); assume linear measurement
+    float measured_voltage = 3.30f * float(raw) / 4095.0f;
+    // Serial.print("Measured value: "); Serial.print(measured_voltage, 2); Serial.println(" V");
+    
+    // Compensate for voltage divider (470k/470k)
+    float Vbat = (940.0f/470.0f) * measured_voltage;
+
+    // 100% is 4.2V
+    // each 1% down, 5.14mV = 0.00514V
+    // so empty = 4.2V - 0.514V = 3.686V
+    // According to spec: max 4.2V, min 2.75V, nominal 3.63V
+    float battery_percentage = (Vbat - 3.686) / 0.514 * 100;
+
+    if (voltage != 0) *voltage = Vbat;
+
+    return battery_percentage;
+}
+
+
+void publish_battery_level()
 {
   unsigned long now = millis();
   if (mqttClient.connected() && now - mqttLastMsgTimestamp > 2000) {
@@ -495,12 +533,16 @@ void ping_mqtt()
     ++lastMsg;
     // First battery reading is unreliable
     if (lastMsg == 1) return;
-    char msg[MSG_BUFFER_SIZE];
-    float battery_percentage = get_battery_percentage();
+    float voltage;
+    float battery_percentage = get_battery_percentage(&voltage);
     int percent = battery_percentage;
-    snprintf (msg, MSG_BUFFER_SIZE, "BAT %d%%", percent);
-    Serial.printf("Publish ping message: %s\n", msg);
-    mqttClient.publish(mqtt_action_channel, msg);
+    StaticJsonDocument<200> doc;
+    doc["level"] = percent;
+    doc["voltage"] = voltage;
+    String msg;
+    serializeJson(doc, msg);
+    Serial.printf("Publish battery level message: %s\n", msg.c_str());
+    mqttClient.publish(mqtt_bat_channel, msg.c_str());
   }
 }
 
@@ -514,7 +556,7 @@ void loop()
   reconnect_mqtt();
   
   // Serial.println("Pinging MQTT...");
-  ping_mqtt();
+  publish_battery_level();
 
   //Serial.println("Handling nfc...");
   handle_nfc();
@@ -582,12 +624,29 @@ void enter_deep_sleep()
   esp_deep_sleep_start();
 }
 
+int bytes_to_hex(char* s, int maxlen, byte* bytes, int count)
+{
+  if (maxlen < 2*count + 1) {
+    return -1;
+  }
+  for (int i = 0; i < count; i++)
+  {
+    int hi = bytes[i] >> 4;
+    int lo = bytes[i] && 0x0f;
+    s[2*i] = (hi < 10 ? hi + '0' : hi + 'A' - 10);
+    s[2*i + 1] = (lo < 10 ? lo + '0' : lo + 'A' - 10);
+  }
+  s[2*count] = 0;
+  return 2*count;
+}
+
 void handle_nfc()
 {
   // Serial.println("\nPlease scan an NFC tag\n");
   boolean success;
   uint8_t uid[] = { 0, 0, 0, 0, 0, 0, 0 };  // Buffer to store the returned UID
   uint8_t uidLength;                        // Length of the UID (4 or 7 bytes depending on ISO14443A card type)
+  char uid_string[2*7+1];
 
   // Wait for an ISO14443A type cards (Mifare, etc.).  When one is found
   // 'uid' will be populated with the UID, and uidLength will indicate
@@ -596,25 +655,20 @@ void handle_nfc()
 
   if (success) {
     Serial.println("Found a card!");
-    // Serial.print("UID Length: "); Serial.print(uidLength, DEC); Serial.println(" bytes");
-    Serial.print("UID Value: ");
-    for (uint8_t i = 0; i < uidLength; i++)
-    {
-      Serial.print(" 0x"); Serial.print(uid[i], HEX);
-    }
-    Serial.println("");
-
-    int length = 0;
-    char msg[256];
-
-    length += snprintf(msg + length, 256 - length, requested_state_actions[requested_state]);
-    length += snprintf(msg + length, 256 - length, " ");
-    for (uint8_t i = 0; i < uidLength; i++)
-    {
-      length += snprintf(msg + length, 256 - length, "%02x", uid[i]);
+    if (bytes_to_hex(uid_string, sizeof(uid_string), uid, uidLength) < 0) {
+      Serial.println("Failed to convert UID to hex string");
+      return;
     }
 
-    strncpy(mqtt_message_to_send, msg, sizeof(mqtt_message_to_send));
+    Serial.printf("UID Value: %s\n", uid_string);
+
+    StaticJsonDocument<200> doc;
+    doc["button"] = requested_state_actions[requested_state];
+    doc["tag"] = uid_string;
+    String msg;
+    serializeJson(doc, msg);
+
+    strncpy(mqtt_message_to_send, msg.c_str(), sizeof(mqtt_message_to_send));
     Serial.printf("Queueing message to send: '%s'\n", mqtt_message_to_send);
 
     if (requested_state == requested_state_disarm_button) set_state(state_disarmed_pending);
@@ -622,27 +676,6 @@ void handle_nfc()
     if (requested_state == requested_state_arm_away_button) set_state(state_armed_away_pending);
   }
   wire.flush();
-}
-
-float get_battery_percentage()
-{
-    int raw = analogRead(PIN_BATTERY_DIVIDER);
-    // Serial.printf("Raw value: %d\n", raw);
-    
-    // 3.3 is full scale (4095); assume linear measurement
-    float measured_voltage = 3.30f * float(raw) / 4095.0f;
-    // Serial.print("Measured value: "); Serial.print(measured_voltage, 2); Serial.println(" V");
-    
-    // Compensate for voltage divider (470k/470k)
-    float Vbat = (940.0f/470.0f) * measured_voltage;
-
-    // 100% is 4.2V
-    // each 1% down, 5.14mV = 0.00514V
-    // so empty = 4.2V - 0.514V = 3.686V
-    // According to spec: max 4.2V, min 2.75V, nominal 3.63V
-    float battery_percentage = (Vbat - 3.686) / 0.514 * 100;
-
-    return battery_percentage;
 }
 
 boolean connectMqtt() {
@@ -663,15 +696,20 @@ boolean connectMqtt() {
   Serial.printf("Subscribing to mqtt %s\n", mqtt_status_channel);
   mqttClient.subscribe(mqtt_status_channel);
 
-  Serial.printf("Sending hello_world to mqtt %s\n", mqtt_action_channel);
-  mqttClient.publish(mqtt_action_channel, "Hello world from esp32");
+  Serial.printf("Sending discovery information to %s\n", mqtt_discovery_channel);
+  StaticJsonDocument<200> doc;
+  doc["name"] = device_name;
+  doc["id"] = device_id;
+  doc["base_topic"] = mqttTopicPrefixValue;
+  doc["status_topic"] = state_topic_name;
+  doc["action_topic"] = action_topic_name;
+  doc["battery_topic"] = battery_level_topic_name;
 
-  Serial.printf("Sending home assistant configuration to %s\n", mqtt_config_channel);
-  char msg[1024];
-  snprintf(msg, 1024, "{\"name\": \"%s\", \"device_class\": \"motion\", \"action_topic\": \"%s\", \"state_topic\": \"%s\", \"battery_level_topic\": \"%s\"}", 
-     /*device_name*/ "rfidpad", mqtt_action_channel, mqtt_status_channel, mqtt_bat_channel);
-  Serial.printf("Config: %s\n", msg);
-  mqttClient.publish(mqtt_config_channel, msg);
+  String msg;
+  serializeJson(doc, msg);
+  
+  Serial.printf("Discovery info: %s\n", msg.c_str());
+  mqttClient.publish(mqtt_discovery_channel, msg.c_str());
   return true;
 }
 
@@ -769,14 +807,25 @@ void mqttMessageReceived(char* topic, byte* payload, unsigned int length)
     Serial.print((char)payload[i]);
   }
   Serial.println();
-  
-  if (strncmp("DISARMED", (char*) payload, length) == 0) {
+
+  StaticJsonDocument<100> doc;
+  if (deserializeJson(doc, payload, length) != DeserializationError::Ok) {
+    Serial.println("Error parsing incoming mqtt message as JSON");
+    return;
+  }
+
+  const char* new_status = doc["new_status"];
+  if (!new_status) {
+    Serial.println("mqtt message does not contains new_status");
+    return;
+  }
+  if (strcmp("DISARMED", new_status) == 0) {
     set_state(state_disarmed);
-  } else if (strncmp("ARMED_HOME", (char*) payload, length) == 0) {
+  } else if (strcmp("ARMED_HOME", new_status) == 0) {
     set_state(state_armed_home);
-  } else if (strncmp("ARMED_AWAY", (char*) payload, length) == 0) {
+  } else if (strcmp("ARMED_AWAY", new_status) == 0) {
     set_state(state_armed_away);
   } else {
-    Serial.println("Received unknown state from mqtt!");
+    Serial.println("Received unknown new status from mqtt!");
   }
 }
