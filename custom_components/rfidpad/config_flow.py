@@ -2,6 +2,7 @@ import logging
 
 from homeassistant import config_entries
 from homeassistant.config_entries import ConfigEntry
+import homeassistant.helpers.config_validation as cv
 from homeassistant.core import callback
 from .const import ( 
     DOMAIN, 
@@ -32,7 +33,9 @@ class RFIDPadConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             )
 
         return self.async_show_form(
-            step_id="user", data_schema=vol.Schema({vol.Optional(CONF_MQTT_PREFIX, default=DEFAULT_MQTT_PREFIX): str})
+            step_id="user", data_schema=vol.Schema({
+                vol.Optional(CONF_MQTT_PREFIX, default=DEFAULT_MQTT_PREFIX): str,
+            })
         )
 
     @staticmethod
@@ -63,11 +66,23 @@ class RFIDPadOptionsFlowHandler(config_entries.OptionsFlow):
 
         return self.async_show_form(
             step_id="user",
-            data_schema=vol.Schema(
-                {
-                    vol.Optional(CONF_MQTT_PREFIX, default=self.options.get(CONF_MQTT_PREFIX, DEFAULT_MQTT_PREFIX)): str
-                }
-            ),
+            data_schema=vol.Schema({
+                vol.Optional(CONF_MQTT_PREFIX,
+                    default=self.options.get(CONF_MQTT_PREFIX, DEFAULT_MQTT_PREFIX)
+                ): str,
+            })
+##                vol.Optional("tags"): 
+##                    vol.All(cv.ensure_list, [cv.string])
+##            })
+
+##                vol.Optional("tags", default=[]): vol.All(cv.ensure_list, [
+##                    cv.string
+####                    vol.Schema({
+####                       vol.Required("tag"): str,
+####                       vol.Required("name"): str
+####                    })
+##                ])
+##            })
         )
 
     async def _update_options(self):

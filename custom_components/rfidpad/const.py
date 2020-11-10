@@ -1,4 +1,5 @@
 """Constants for rfidpad."""
+
 # Base component constants
 NAME = "RFIDPad"
 DOMAIN = "rfidpad"
@@ -22,10 +23,9 @@ PLATFORMS = [SENSOR]
 
 
 # Configuration and options
-CONF_ENABLED = "enabled"
-CONF_USERNAME = "username"
-CONF_PASSWORD = "password"
 CONF_MQTT_PREFIX = "mqtt_prefix"
+CONF_TAGS = "tags"
+CONF_TAG = "tag"
 
 DEVICE_CONF_ID = "id"
 DEVICE_CONF_NAME = "name"

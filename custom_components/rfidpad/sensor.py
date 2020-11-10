@@ -26,16 +26,6 @@ async def async_setup_entry(hass, config_entry, async_add_devices):
 
     await handler.start_discovery()
 
-
-
-##    new_devices = []
-##    for pad in handler.pads:
-##        #new_devices.append(BatterySensor(pad))
-##        new_devices.append(RFIDPadSensor(pad))
-##    if new_devices:
-##        _LOGGER.info(f"Adding {len(new_devices)} entities")
-##        async_add_devices(new_devices)
-
 class BatterySensor(Entity):
     """Representation of a Sensor."""
 

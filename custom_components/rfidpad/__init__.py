@@ -9,15 +9,20 @@ from datetime import timedelta
 import json
 import logging
 
+import voluptuous as vol
 from homeassistant.components import mqtt
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import Config, HomeAssistant, callback
 from homeassistant.exceptions import ConfigEntryNotReady
+import homeassistant.helpers.config_validation as cv
 
+from homeassistant.const import (
+        CONF_NAME,
+)
 from .const import (
-    CONF_PASSWORD,
-    CONF_USERNAME,
     CONF_MQTT_PREFIX,
+    CONF_TAGS,
+    CONF_TAG,
     DOMAIN,
     BINARY_SENSOR,
     SENSOR,
@@ -48,6 +53,19 @@ SCAN_INTERVAL = timedelta(seconds=30)
 
 _LOGGER = logging.getLogger(__name__)
 
+TAG_SCHEMA = vol.All(cv.string, cv.matches_regex(r'([0-9a-fA-F][0-9a-fA-F]){1,}'))
+
+
+CONFIG_SCHEMA = vol.Schema({
+    DOMAIN: vol.Schema({
+        vol.Optional(CONF_TAGS): vol.Schema([
+            vol.Schema({
+                vol.Required(CONF_NAME): cv.string,
+                vol.Required(CONF_TAG): TAG_SCHEMA
+            })
+        ])
+    }),
+}, extra = vol.ALLOW_EXTRA)
 
 async def async_setup(hass: HomeAssistant, config: Config):
     """Set up this integration using YAML is not supported."""
@@ -55,6 +73,26 @@ async def async_setup(hass: HomeAssistant, config: Config):
         _LOGGER.error("MQTT integration is not set up")
         return False
     hass.data[DOMAIN] = {}
+    hass.data[DOMAIN][CONF_TAGS] = {}
+
+    if DOMAIN not in config:
+        _LOGGER.error(f"{DOMAIN} not configured in configuration.yaml, no tags will be recognized!")
+        return True
+
+    conf = config[DOMAIN]
+    _LOGGER.debug(f"Setting up rfidpad integration with conf: {conf}")
+
+    if CONF_TAGS not in conf:
+        _LOGGER.error(f"{DOMAIN}.{CONF_TAGS} not configured in configuration.yaml, no tags will be recognized!")
+        return True
+
+    tags = conf[CONF_TAGS]
+
+    tag_dict = { item[CONF_TAG].upper():item[CONF_NAME] for item in tags }
+    _LOGGER.debug(f"Tags enabled for {DOMAIN}: {tag_dict}")
+
+    hass.data[DOMAIN][CONF_TAGS] = tag_dict
+
     return True
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
@@ -64,22 +102,19 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
         _LOGGER.info(STARTUP_MESSAGE)
 
         
-    _LOGGER.info("async_setup_entry with entry: {}".format(entry))
-    _LOGGER.info(f"entry_id: {entry.entry_id}; version: {entry.version}; data: {entry.data}")
-
-#    if entry.version != RFIDPadConfigFlow.VERSION:
-#        await async_migrate_entry(hass, entry)
+    _LOGGER.debug("async_setup_entry with entry: {}".format(entry))
+    _LOGGER.debug(f"entry_id: {entry.entry_id}; version: {entry.version}; data: {entry.data}")
 
     mqtt_prefix = entry.data.get(CONF_MQTT_PREFIX)
     handler = RFIDPadHandler(hass, entry, mqtt_prefix)
     hass.data[DOMAIN][entry.entry_id] = handler
 
     for platform in PLATFORMS:
-        #coordinator.platforms.append(platform)
         hass.async_add_job(
             hass.config_entries.async_forward_entry_setup(entry, platform)
         )
 
+    # TODO
     #entry.add_update_listener(async_reload_entry)
     return True
 
@@ -165,6 +200,8 @@ class RFIDPad:
     def __init__(self, hass, handler, config):
         self.hass = hass
         self.handler = handler
+        self.allowed_tags = hass.data[DOMAIN][CONF_TAGS]
+        _LOGGER.info(f"Allowed tags: {self.allowed_tags}")
         self.id = config[DEVICE_CONF_ID]
         self.name = config[DEVICE_CONF_NAME]
         try:
@@ -217,6 +254,19 @@ class RFIDPad:
 
     async def async_receive_action(self, msg):
         _LOGGER.info(f"Received action message: {msg}")
+        try:
+            message = json.loads(msg.payload)
+        except:
+            _LOGGER.info(f"Cannot parse rfidpad battery message: {msg.payload}")
+        button = message["button"]
+        tag = message["tag"].upper()
+
+        if tag in self.allowed_tags:
+            self.hass.bus.fire("rfidpad.tag_scanned", {"button": button, "tag":
+                tag, "name": self.allowed_tags[tag]})
+        else:
+            _LOGGER.warn(f"unknown tag {tag}")
+
 
     async def async_receive_battery(self, msg):
         _LOGGER.info(f"Received battery message: {msg}")

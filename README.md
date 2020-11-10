@@ -26,5 +26,42 @@ And if possible also:
 - Power usage. The PN532 board has an LED that burns as long as the board is powered. That means the Vcc of the PN532 will need to be switched using e.g. a FET to prevent the board from using too much power during the deep sleep period. Also, the deep sleep mode of the PN532 chip isn't supported by the library supplied by Elechouse.
 - Housing, including the pushbutton and status LEDs.
 
+# Firmware
+Use the Arduino IDE to compile the firmware. Select the ESP32 dev board as the
+target. Upload it to your RFIDPad
+
 # Home Assistant custom component
-- To be done.
+
+## Prerequisities
+You will need an MQTT server such as Mosquitto. Configure MQTT in your Home
+Assistant installation. Give the homeassistant user read access to
+`rfidpad/discovery/#`, to `rfidpad/+/battery` and to `rfidpad/+/action`.
+Give it write access to `rfidpad/+/status`.
+
+Add an `rfidpad` user and give it write access to 
+`rfidpad/discovery/#`, to `rfidpad/+/battery` and to `rfidpad/+/action`.
+Give it write access to `rfidpad/+/status`.
+
+## Installation via HACS
+- First install HACS in Home assistant. See https://hacs.xyz/ for instructions.
+- Open the Community panel in Home Assistant
+- Open the 'hamburger menu' and select 'Custom repositories'
+- Enter https://github.com/janpascal/rfidpad where it says 'Add custom repository URL'. In the Category dropdown select 'Integration' and click 'Add' 
+- Now press the big '+' on the bottom of the screen. Search for 'RFIDPad', select it and click on 'Install this repository in HACS'
+- Configure the RFID custom component by filling in the base MQTT topic. The default (rfidpad) will do if you haven't changed the firmware.
+
+## Configuration
+The tags that can be used to arm/disarm your Home Assistant alarm need to be
+configured in Home Assistant's `configuration.yaml` configuration file.
+Add a snippet like:
+
+  rfidpad:
+    tags:
+      - tag: ABCD0145
+        name: Mary
+      - tag: 45AB12EC
+        name: John
+
+and restart Home Assistant
+
+## Automations
