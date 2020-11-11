@@ -114,6 +114,19 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
             hass.config_entries.async_forward_entry_setup(entry, platform)
         )
 
+    def handle_update_status(call):
+        """Handle the service call."""
+        _LOGGER.debug(f"rfidpad service call: {call.data}")
+        new_status = call.data.get("new_status", "")
+        if new_status == '':
+            _LOGGER.warning(f"Received illegal data in service rfidpad.update_status: {call.data}")
+            return
+
+        hass.async_add_job(handler.async_update_status(new_status))
+
+
+    hass.services.async_register(DOMAIN, "update_status", handle_update_status)
+
     # TODO
     #entry.add_update_listener(async_reload_entry)
     return True
@@ -195,6 +208,10 @@ class RFIDPadHandler:
         else:
             self.devices[pad.id] = pad
             await pad.start()
+
+    async def async_update_status(self, new_status):
+        for device in self.devices.values():
+            await device.async_update_status(new_status)
 
 class RFIDPad:
     def __init__(self, hass, handler, config):
@@ -279,3 +296,10 @@ class RFIDPad:
 
         await self.battery_sensor.async_update_ha_state()
 
+    async def async_update_status(self, new_status):
+        message = {
+            "new_status": new_status
+        }
+        msg = json.dumps(message)
+        _LOGGER.debug(f"Publishing {msg} to {self.status_topic}")
+        mqtt.async_publish(self.hass, self.status_topic, msg)
