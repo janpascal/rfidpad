@@ -700,7 +700,7 @@ boolean connectMqtt() {
   StaticJsonDocument<200> doc;
   doc["name"] = device_name;
   doc["id"] = device_id;
-  doc["base_topic"] = mqttTopicPrefixValue;
+  doc["base_topic"] = String(mqttTopicPrefixValue) + "/" + String(device_id);
   doc["status_topic"] = state_topic_name;
   doc["action_topic"] = action_topic_name;
   doc["battery_topic"] = battery_level_topic_name;
