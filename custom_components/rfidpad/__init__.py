@@ -326,4 +326,4 @@ class RFIDPad:
         }
         msg = json.dumps(message)
         _LOGGER.debug(f"Publishing {msg} to {self.status_topic}")
-        mqtt.async_publish(self.hass, self.status_topic, msg)
+        mqtt.async_publish(self.hass, self.status_topic, msg, retain=True)
