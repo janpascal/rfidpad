@@ -357,19 +357,6 @@ requested_state_t get_requested_state()
         Serial.println("Wakeup caused by external signal using RTC_CNTL"); 
         bitmask = esp_sleep_get_ext1_wakeup_status();
         Serial.printf("Wake up trigger bitmask: %016llx\n", bitmask);
-        if (digitalRead(PIN_DISARM_BUTTON) == HIGH) {
-          response = requested_state_disarm_button;
-          count++;
-        }
-        if (digitalRead(PIN_ARM_HOME_BUTTON) == HIGH) {
-          response = requested_state_arm_home_button;
-          count++;
-        }
-        if (digitalRead(PIN_ARM_AWAY_BUTTON) == HIGH) {
-          response = requested_state_arm_away_button;
-          count++;
-        }
-        /*
         if (bitmask & (1ULL << PIN_DISARM_BUTTON)) {
           response = requested_state_disarm_button;
           count++;
@@ -382,7 +369,6 @@ requested_state_t get_requested_state()
             response = requested_state_arm_away_button;
             count++;
         } 
-        */
         if (count == 0) {
           Serial.println("Woken up by unknown pin");
           return requested_state_unknown;
@@ -406,9 +392,24 @@ requested_state_t get_requested_state()
 
 void update_requested_state_from_buttons()
 {
-  if (digitalRead(PIN_DISARM_BUTTON) == HIGH) requested_state = requested_state_disarm_button;
-  if (digitalRead(PIN_ARM_HOME_BUTTON) == HIGH) requested_state = requested_state_arm_home_button;
-  if (digitalRead(PIN_ARM_AWAY_BUTTON) == HIGH) requested_state = requested_state_arm_away_button;
+  int count = 0;
+  if (digitalRead(PIN_DISARM_BUTTON) == HIGH) {
+    requested_state = requested_state_disarm_button;
+    count++;
+  }
+  if (digitalRead(PIN_ARM_HOME_BUTTON) == HIGH) {
+    requested_state = requested_state_arm_home_button;
+    count++;
+  }
+  if (digitalRead(PIN_ARM_AWAY_BUTTON) == HIGH) {
+    requested_state = requested_state_arm_away_button;
+    count++;
+  }
+  if (count > 1) {
+    requested_state = requested_state_config;
+    // config state doesn't need to be requested, do it immediately
+    current_state = state_config;
+  }
 }
 
 int lastBlinkMillis = 0;
