@@ -83,6 +83,9 @@
 // For debugging and power usage measurements: Wake up every minute
 // #define DEEP_SLEEP_TIMER_MICROSECONDS (1000000LL * 60)
 
+// Internal buffer size for MQTT library. Default of 256 is too small for discovery messages
+#define MQTT_BUFFER_SIZE 512
+
 enum requested_state_t {
   requested_state_unknown,
   requested_state_disarm_button,
@@ -117,6 +120,10 @@ const char state_topic_name[] = "status";
 const char battery_level_topic_name[] = "bat";
 
 const char* caFilename = "/ca.crt";
+
+const char* sw_version = "0.1";
+const char* manufacturer = "janpascal@vanbest.org";
+const char* model = "RFIDPAD v0.4";
 
 // -- Configuration specific key. The value should be modified if config structure was changed.
 #define CONFIG_VERSION "rfidpad_v1"
@@ -291,6 +298,9 @@ void setup()
 
 
   mqttClient.setCallback(mqttMessageReceived);
+  if (!mqttClient.setBufferSize(MQTT_BUFFER_SIZE)) {
+    Serial.printf("Failed to set mqtt buffer size to %d\n", MQTT_BUFFER_SIZE);
+  }
 
   Serial.println("Setting up i2c...");
   if (!wire.begin(PIN_SDA, PIN_SCL)) {
@@ -728,12 +738,17 @@ boolean connectMqtt() {
   doc["status_topic"] = state_topic_name;
   doc["action_topic"] = action_topic_name;
   doc["battery_topic"] = battery_level_topic_name;
+  doc["model"] = model;
+  doc["manufacturer"] = manufacturer;
+  doc["sw_version"] = sw_version;
 
   String msg;
-  serializeJson(doc, msg);
+  size_t msg_size = serializeJson(doc, msg);
   
   Serial.printf("Discovery info: %s\n", msg.c_str());
-  mqttClient.publish(mqtt_discovery_channel, msg.c_str());
+  if (! mqttClient.publish(mqtt_discovery_channel, msg.c_str(), /*retain*/ true)) {
+    Serial.println("Failed to publish discovery message");
+  }
   return true;
 }
 
