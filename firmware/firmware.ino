@@ -76,15 +76,23 @@
 // Stay away for 10 minutes when multiple buttons were pressed during startup
 #define CONFIG_WAKE_TIME 600000
 
+// If no buttons are pushed, stay in deep sleep for this many microseconds
+// When woken up, only send battery info and re-enter deep sleep
+// Wake up every 24 hours
+#define DEEP_SLEEP_TIMER_MICROSECONDS (1000000LL * 3600LL * 24)
+// For debugging and power usage measurements: Wake up every minute
+// #define DEEP_SLEEP_TIMER_MICROSECONDS (1000000LL * 60)
+
 enum requested_state_t {
   requested_state_unknown,
   requested_state_disarm_button,
   requested_state_arm_home_button,
   requested_state_arm_away_button,
-  requested_state_config
+  requested_state_config,
+  requested_state_report
 };
 
-static const char *requested_state_actions[] = { "SCAN", "DISARM", "ARM_HOME", "ARM_AWAY", "SCAN" };
+static const char *requested_state_actions[] = { "SCAN", "DISARM", "ARM_HOME", "ARM_AWAY", "SCAN", "SCAN" };
 
 enum state_t {
   state_unknown,
@@ -94,7 +102,8 @@ enum state_t {
   state_armed_home_pending,
   state_armed_away,
   state_armed_away_pending,
-  state_config                // CA certificate incomplete or double buttons pressed
+  state_config,                // CA certificate incomplete or double buttons pressed
+  state_report                 // Just report battery level over MQTT and sleep again
 };
 
 // -- Initial name of the Thing. Used e.g. as SSID of the own Access Point.
@@ -104,7 +113,7 @@ const char thingName[] = "keypad";
 const char wifiInitialApPassword[] = "pad323232";
 
 const char action_topic_name[] = "action";
-const char state_topic_name[] = "state";
+const char state_topic_name[] = "status";
 const char battery_level_topic_name[] = "bat";
 
 const char* caFilename = "/ca.crt";
@@ -148,8 +157,7 @@ IotWebConfParameter mqttTopicPrefixParam = IotWebConfParameter("MQTT prefix", "m
 boolean needMqttConnect = false;
 unsigned long lastMqttConnectionAttempt = 0;
 static int current_led = 0;
-unsigned long lastMsg = 0;
-unsigned long mqttLastMsgTimestamp = 0;
+unsigned long mqttLastBatteryMessageTimestamp = 0;
 
 // Overwritten at startup
 char mqtt_status_channel[MAX_TOPIC_LEN] = "rfidpad/status";
@@ -188,6 +196,8 @@ void setup()
   requested_state = get_requested_state();
   if (requested_state == requested_state_config) {
     current_state = state_config;
+  } else if (requested_state == requested_state_report) {
+    current_state = state_report;
   } else {
     current_state = state_unknown;
   }
@@ -353,6 +363,10 @@ requested_state_t get_requested_state()
     case ESP_SLEEP_WAKEUP_EXT0 : 
         Serial.println("Wakeup caused by external signal using RTC_IO"); 
         break;
+    case ESP_SLEEP_WAKEUP_TIMER : 
+        Serial.println("Wakeup caused by timer"); 
+        return requested_state_report;
+        break;        
     case ESP_SLEEP_WAKEUP_EXT1 : 
         Serial.println("Wakeup caused by external signal using RTC_CNTL"); 
         bitmask = esp_sleep_get_ext1_wakeup_status();
@@ -381,7 +395,6 @@ requested_state_t get_requested_state()
         Serial.printf("Woken up by multiple pins, wakeup reason %d\n", requested_state_config);
         return requested_state_config;
         break;
-    case ESP_SLEEP_WAKEUP_TIMER : Serial.println("Wakeup caused by timer"); break;
     case ESP_SLEEP_WAKEUP_TOUCHPAD : Serial.println("Wakeup caused by touchpad"); break;
     case ESP_SLEEP_WAKEUP_ULP : Serial.println("Wakeup caused by ULP program"); break;
     default : Serial.printf("Wakeup was not caused by deep sleep: %d\n", wakeup_reason); break;
@@ -529,11 +542,8 @@ float get_battery_percentage(float* voltage = 0)
 void publish_battery_level()
 {
   unsigned long now = millis();
-  if (mqttClient.connected() && now - mqttLastMsgTimestamp > 2000) {
-    mqttLastMsgTimestamp = now;
-    ++lastMsg;
-    // First battery reading is unreliable
-    if (lastMsg == 1) return;
+  if (mqttClient.connected() && now - mqttLastBatteryMessageTimestamp > 2000) {
+    mqttLastBatteryMessageTimestamp = now;
     float voltage;
     float battery_percentage = get_battery_percentage(&voltage);
     int percent = battery_percentage;
@@ -561,10 +571,15 @@ void loop()
 
   //Serial.println("Handling nfc...");
   handle_nfc();
+
   //Serial.println("Checking for pressed button...");
   update_requested_state_from_buttons();
-  //Serial.println("Updating state LEDs...");
-  update_state_leds(current_state);
+  
+  if (current_state != state_report) {
+      // Only if not in report mode
+      //Serial.println("Updating state LEDs...");
+      update_state_leds(current_state);
+  }
 
   //Serial.println("Checking if we need to send an MQTT message...");
   if (mqtt_message_to_send[0] != 0 && mqttClient.connected())
@@ -574,11 +589,18 @@ void loop()
     mqtt_message_to_send[0] = 0;
   }
 
+  // If we're in report mode and mqtt has connected, send battery level and go to sleep
+  if (current_state == state_report && mqttClient.connected()) {
+      Serial.println("We're in report state and MQTT has just connected");
+      publish_battery_level();
+      enter_deep_sleep();
+  }
+  
   //Serial.println("Checking if we need to shut down...");
   if (current_state != state_config && millis() - last_state_change > NORMAL_WAKE_TIME) {
     int awake_time = millis() - last_state_change;
     Serial.printf("Been awake without action for more than %d ms, going to deep sleep...\n", millis() - last_state_change);
-    mqttClient.publish(mqtt_action_channel, "Going to sleep");
+    // mqttClient.publish(mqtt_action_channel, "Going to sleep");
     enter_deep_sleep();
   }
 
@@ -622,6 +644,7 @@ void enter_deep_sleep()
   snprintf(msg, 80, "Deep sleep mask: %016llx", mask);
   Serial.println(msg);
   esp_sleep_enable_ext1_wakeup(mask, ESP_EXT1_WAKEUP_ANY_HIGH);
+  esp_sleep_enable_timer_wakeup(DEEP_SLEEP_TIMER_MICROSECONDS);
   esp_deep_sleep_start();
 }
 
