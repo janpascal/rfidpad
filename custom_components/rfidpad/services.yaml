@@ -1,0 +1,13 @@
+# Example services.yaml entry
+
+update_status:
+  # Description of the service
+  description: Update RFIDPad status
+  # Different fields that your service accepts
+  fields:
+    # Key of the field
+    new_status:
+      # Description of the field
+      description: New status to set. Either DISARMED, ARMED_HOME or ARMED_AWAY
+      # Example value that can be passed for this field
+      example: "ARMED_AWAY"
