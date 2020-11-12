@@ -55,12 +55,14 @@ The tags that can be used to arm/disarm your Home Assistant alarm need to be
 configured in Home Assistant's `configuration.yaml` configuration file.
 Add a snippet like:
 
-  rfidpad:
-    tags:
-      - tag: ABCD0145
-        name: Mary
-      - tag: 45AB12EC
-        name: John
+```
+rfidpad:
+  tags:
+    - tag: ABCD0145
+      name: Mary
+    - tag: 45AB12EC
+      name: John
+```
 
 and restart Home Assistant
 
