@@ -44,6 +44,7 @@ from .const import (
     DEFAULT_STATUS_TOPIC,
     DEFAULT_ACTION_TOPIC,
     DEFAULT_BATTERY_TOPIC,
+    STATUS_TRANSITIONS,
 )
 
 from .config_flow import RFIDPadConfigFlow
@@ -275,12 +276,21 @@ class RFIDPad:
             message = json.loads(msg.payload)
         except:
             _LOGGER.info(f"Cannot parse rfidpad battery message: {msg.payload}")
-        button = message["button"]
-        tag = message["tag"].upper()
+            return
+
+        try:
+            button = message["button"]
+            tag = message["tag"].upper()
+        except:
+            _LOGGER.info(f"Action message from board does not contain 'button' and 'message' tags: {msg.payload}")
+            return
+        tag_name = self.allowed_tags[tag]
 
         if tag in self.allowed_tags:
             self.hass.bus.fire("rfidpad.tag_scanned", {"button": button, "tag":
-                tag, "name": self.allowed_tags[tag]})
+                tag, "name": tag_name})
+            # Send new status to all boards
+            await self.handler.async_update_status(STATUS_TRANSITIONS[button])
         else:
             _LOGGER.warn(f"unknown tag {tag}")
 
