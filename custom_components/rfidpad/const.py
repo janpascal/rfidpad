@@ -41,7 +41,11 @@ STATUS_TRANSITIONS = {
     'DISARM': 'DISARMED',
     'ARM_HOME': 'ARMED_HOME',
     'ARM_AWAY': 'ARMED_AWAY',
+    'SCAN': None,
 }
+
+ATTR_TAG_NAME = "tag_name"
+ATTR_BUTTON = "button"
 
 # Defaults
 DEFAULT_NAME = DOMAIN

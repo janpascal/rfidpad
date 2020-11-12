@@ -48,7 +48,7 @@ from .const import (
 )
 
 from .config_flow import RFIDPadConfigFlow
-from .sensor import BatterySensor
+from .sensor import BatterySensor, LastTagSensor
 
 SCAN_INTERVAL = timedelta(seconds=30)
 
@@ -258,12 +258,17 @@ class RFIDPad:
 
         self.battery_level = None
         self.battery_voltage = None
+        self.last_tag = None
+        self.last_tag_name = None
+        self.last_tag_action = None
 
     async def start(self):
         _LOGGER.info(f"Subscribing to rfidpad action: {self.action_topic}")
 
         self.battery_sensor = BatterySensor(self.hass, self)
-        new_devices = [self.battery_sensor,]
+        self.last_tag_sensor = LastTagSensor(self.hass, self)
+        new_devices = [self.battery_sensor, self.last_tag_sensor]
+
         _LOGGER.info(f"Adding {len(new_devices)} entities")
         self.handler.async_add_devices[SENSOR](new_devices)
 
@@ -284,16 +289,25 @@ class RFIDPad:
         except:
             _LOGGER.info(f"Action message from board does not contain 'button' and 'message' tags: {msg.payload}")
             return
-        tag_name = self.allowed_tags[tag]
+
+        self.last_tag = tag
 
         if tag in self.allowed_tags:
+            tag_name = self.allowed_tags[tag]
+            self.last_tag_name = tag_name
+            self.last_tag_action = button
             self.hass.bus.fire("rfidpad.tag_scanned", {"button": button, "tag":
                 tag, "name": tag_name})
             # Send new status to all boards
-            await self.handler.async_update_status(STATUS_TRANSITIONS[button])
+            new_status = STATUS_TRANSITIONS[button]
+            if new_status != None:
+                await self.handler.async_update_status(STATUS_TRANSITIONS[button])
         else:
             _LOGGER.warn(f"unknown tag {tag}")
+            self.last_tag_name = None
+            self.last_tag_action = None
 
+        await self.last_tag_sensor.async_update_ha_state()
 
     async def async_receive_battery(self, msg):
         _LOGGER.info(f"Received battery message: {msg}")

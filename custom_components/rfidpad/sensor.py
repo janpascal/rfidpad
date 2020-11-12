@@ -4,7 +4,7 @@ import logging
 from homeassistant.const import ATTR_VOLTAGE, DEVICE_CLASS_BATTERY, PERCENTAGE
 from homeassistant.helpers.entity import Entity
 
-from .const import DOMAIN, SENSOR, PLATFORMS
+from .const import DOMAIN, SENSOR, PLATFORMS, ATTR_TAG_NAME, ATTR_BUTTON
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -34,7 +34,6 @@ class BatterySensor(Entity):
         _LOGGER.info(f"Battery sensor has hass: {hass}")
         self.hass = hass
         self._device = device
-        self._state = None
 
     @property
     def unique_id(self):
@@ -80,6 +79,49 @@ class BatterySensor(Entity):
         attr = {}
 
         attr[ATTR_VOLTAGE] = self._device.battery_voltage
+
+        return attr
+
+class LastTagSensor(Entity):
+    """Representation of the last scanned tag by an RFIDPad."""
+
+    def __init__(self, hass, device):
+        """Initialize the sensor."""
+        self.hass = hass
+        self._device = device
+
+    @property
+    def unique_id(self):
+        return f"{DOMAIN}_{self._device.id}_tag"
+
+    @property
+    def name(self):
+        """Return the name of the sensor."""
+        return f"{self._device.name} Tag" 
+
+    @property
+    def device_info(self):
+        return {
+            "identifiers": {(DOMAIN, self._device.id)},
+        }
+
+    @property
+    def state(self):
+        """Return the state of the sensor."""
+        return self._device.last_tag
+
+    @property
+    def should_poll(self):
+        """No need to poll, rfidpad will push state over MQTT."""
+        return False
+
+    @property
+    def device_state_attributes(self):
+        """Return the state attributes of the sensor."""
+        attr = {}
+
+        attr[ATTR_TAG_NAME] = self._device.last_tag_name
+        attr[ATTR_BUTTON] = self._device.last_tag_action
 
         return attr
 
