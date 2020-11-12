@@ -11,12 +11,12 @@ download the executable.-->
 			<GUIDES horiz='7' vert='5'/>
 			<TITLE>RFIDpad</TITLE>
 			<AUTHOR>Jan-Pascal van Best</AUTHOR>
-			<REVISION>0.3</REVISION>
+			<REVISION>0.4</REVISION>
 			<DOCNUMBER></DOCNUMBER>
 			<ORGANISATION></ORGANISATION>
 			<SHEETS>1 of 1</SHEETS>
 			<SHOWS>1</SHOWS>
-			<DATE>2020-10-14</DATE>
+			<DATE>2020-11-12</DATE>
 			<GRID spacing='50.00000' snap='1'/>
 		</DETAILS>
 		<FONT id='1'>
@@ -943,31 +943,47 @@ M(@&amp;:$PG0G$B YD0&quot;-&quot;&lt;2H#F1 ,V)!&amp;A.)$!S(@&amp;:$PG0G$B YD0&qu
 			</TinyCAD>
 		</SYMBOLDEF>
 		<SYMBOLDEF id='12'>
-			<NAME type='0'>C</NAME>
+			<NAME type='0'>CE</NAME>
 			<REF type='0'>C?</REF>
-			<DESCRIPTION>Capacitor</DESCRIPTION>
+			<DESCRIPTION>Capacitor Electrolytic</DESCRIPTION>
 			<PPP>1</PPP>
 			<GUID></GUID>
-			<REF_POINT power='0' part='0' pos='96.00000,33.00000'/>
+			<REF_POINT power='0' part='0' pos='92.00000,32.00000'/>
 			<TinyCAD>
-				<POLYGON pos='94.00000,30.00000' style='6' fill='0' polygon='0'>
+				<POLYGON pos='90.60000,26.80000' style='6' fill='0' polygon='0'>
+					<POINT pos='0.00000,0.00000' arc='0'/>
+					<POINT pos='1.20000,0.00000' arc='0'/>
+				</POLYGON>
+				<POLYGON pos='91.20000,26.20000' style='6' fill='0' polygon='0'>
+					<POINT pos='0.00000,0.00000' arc='0'/>
+					<POINT pos='0.00000,1.20000' arc='0'/>
+				</POLYGON>
+				<POLYGON pos='89.20000,28.00000' style='6' fill='0' polygon='0'>
+					<POINT pos='1.60000,0.00000' arc='0'/>
+					<POINT pos='0.00000,0.00000' arc='0'/>
+				</POLYGON>
+				<POLYGON pos='90.00000,29.00000' style='6' fill='0' polygon='0'>
 					<POINT pos='0.00000,0.00000' arc='0'/>
 					<POINT pos='0.00000,3.00000' arc='0'/>
 				</POLYGON>
-				<POLYGON pos='94.00000,26.00000' style='6' fill='0' polygon='0'>
+				<POLYGON pos='90.00000,25.00000' style='6' fill='0' polygon='0'>
 					<POINT pos='0.00000,3.00000' arc='0'/>
 					<POINT pos='0.00000,0.00000' arc='0'/>
 				</POLYGON>
-				<POLYGON pos='92.40000,30.00000' style='6' fill='0' polygon='0'>
+				<POLYGON pos='91.60000,28.00000' style='6' fill='0' polygon='0'>
+					<POINT pos='0.00000,1.00000' arc='0'/>
 					<POINT pos='0.00000,0.00000' arc='0'/>
-					<POINT pos='3.20000,0.00000' arc='0'/>
 				</POLYGON>
-				<POLYGON pos='92.40000,29.00000' style='6' fill='0' polygon='0'>
+				<POLYGON pos='88.40000,28.00000' style='6' fill='0' polygon='0'>
 					<POINT pos='0.00000,0.00000' arc='0'/>
-					<POINT pos='3.20000,0.00000' arc='0'/>
+					<POINT pos='0.00000,1.00000' arc='0'/>
 				</POLYGON>
-				<PIN pos='94.00000,26.00000' which='5' elec='4' direction='1' part='0' number='1' show='0' length='30' number_pos='0' centre_name='0'></PIN>
-				<PIN pos='94.00000,33.00000' which='5' elec='4' direction='0' part='0' number='2' show='0' length='30' number_pos='0' centre_name='0'></PIN>
+				<POLYGON pos='88.40000,29.00000' style='6' fill='0' polygon='0'>
+					<POINT pos='0.00000,0.00000' arc='0'/>
+					<POINT pos='3.00000,0.00000' arc='0'/>
+				</POLYGON>
+				<PIN pos='90.00000,32.00000' which='5' elec='4' direction='0' part='0' number='2' show='0' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='90.00000,25.00000' which='5' elec='4' direction='1' part='0' number='1' show='0' length='30' number_pos='0' centre_name='0'></PIN>
 			</TinyCAD>
 		</SYMBOLDEF>
 		<OPTIONS>
@@ -1301,12 +1317,6 @@ M(@&amp;:$PG0G$B YD0&quot;-&quot;&lt;2H#F1 ,V)!&amp;A.)$!S(@&amp;:$PG0G$B YD0&qu
 		<WIRE a='36.00000,124.00000' b='36.00000,115.00000'/>
 		<WIRE a='36.00000,132.00000' b='36.00000,140.00000'/>
 		<POWER pos='22.00000,140.00000' which='0' direction='2'>GND</POWER>
-		<SYMBOL id='12' pos='49.00000,132.00000' part='0' rotate='0' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
-			<FIELD type='0' description='Ref' value='C1' show='1' pos='1.00000,-2.60000'/>
-			<FIELD type='0' description='Name' value='10n' show='1' pos='1.00000,-5.00000'/>
-			<HINT pin='1' net='14'/>
-			<HINT pin='2' net='5'/>
-		</SYMBOL>
 		<WIRE a='47.00000,125.00000' b='47.00000,115.00000'/>
 		<JUNCTION pos='47.00000,115.00000'/>
 		<WIRE a='57.00000,115.00000' b='47.00000,115.00000'/>
@@ -1314,5 +1324,10 @@ M(@&amp;:$PG0G$B YD0&quot;-&quot;&lt;2H#F1 ,V)!&amp;A.)$!S(@&amp;:$PG0G$B YD0&qu
 		<WIRE a='36.00000,140.00000' b='22.00000,140.00000'/>
 		<JUNCTION pos='36.00000,140.00000'/>
 		<WIRE a='47.00000,140.00000' b='36.00000,140.00000'/>
+		<SYMBOL id='12' pos='49.00000,132.00000' part='0' rotate='0' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+			<FIELD type='0' description='Ref' value='C1' show='1' pos='1.00000,-2.60000'/>
+			<FIELD type='0' description='Name' value='CE' show='0' pos='1.00000,-5.00000'/>
+			<FIELD type='3' description='Value' value='10µF' show='1' pos='1.00000,-0.20000'/>
+		</SYMBOL>
 	</TinyCAD>
 </TinyCADSheets>
