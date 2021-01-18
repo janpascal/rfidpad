@@ -10,11 +10,14 @@ import json
 import logging
 
 import voluptuous as vol
-from homeassistant.components import mqtt
+from homeassistant.components import mqtt, websocket_api
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import Config, HomeAssistant, callback
 from homeassistant.exceptions import ConfigEntryNotReady
 import homeassistant.helpers.config_validation as cv
+from homeassistant.helpers.storage import Store
+from homeassistant.helpers.typing import ConfigType, HomeAssistantType
+import homeassistant.util.dt as dt_util
 
 from homeassistant.const import (
         CONF_NAME,
@@ -45,6 +48,12 @@ from .const import (
     DEFAULT_ACTION_TOPIC,
     DEFAULT_BATTERY_TOPIC,
     STATUS_TRANSITIONS,
+    STORAGE_KEY,
+    STORAGE_VERSION,
+    SAVE_DELAY,
+    MAX_HISTORY,
+    HISTORY_UPDATED_EVENT,
+    TAG_SCANNED_EVENT,
 )
 
 from .config_flow import RFIDPadConfigFlow
@@ -94,6 +103,25 @@ async def async_setup(hass: HomeAssistant, config: Config):
 
     hass.data[DOMAIN][CONF_TAGS] = tag_dict
 
+   # Register websocket API
+    websocket_api.async_register_command(hass, ws_tag_history)
+
+    # Return boolean to indicate that initialization was successfully.
+    return True
+
+
+@websocket_api.websocket_command({
+    vol.Required('type'): 'rfidpad/tag_history',
+})
+def ws_tag_history(hass: HomeAssistantType,
+                   connection: websocket_api.ActiveConnection, msg):
+    """History of usage of user code tags."""
+    manager = hass.data[DOMAIN]  # type: RFIDPadHandler
+    connection.send_result(msg['id'], {
+        'history': list(reversed(manager._history)),
+    })
+    
+
     return True
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
@@ -108,6 +136,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
 
     mqtt_prefix = entry.data.get(CONF_MQTT_PREFIX)
     handler = RFIDPadHandler(hass, entry, mqtt_prefix)
+    await handler.async_initialize()
     hass.data[DOMAIN][entry.entry_id] = handler
 
     for platform in PLATFORMS:
@@ -155,25 +184,25 @@ async def async_migrate_entry(hass, config_entry: ConfigEntry):
 
     return True
 
-##
-##async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry):
-##    """Handle removal of an entry."""
-##    coordinator = hass.data[DOMAIN][entry.entry_id]
-##    unloaded = all(
-##        await asyncio.gather(
-##            *[
-##                hass.config_entries.async_forward_entry_unload(entry, platform)
-##                for platform in PLATFORMS
-##                if platform in coordinator.platforms
-##            ]
-##        )
-##    )
-##    if unloaded:
-##        hass.data[DOMAIN].pop(entry.entry_id)
-##
-##    return unloaded
-##
-##
+
+async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry):
+    """Handle removal of an entry."""
+    handler = hass.data[DOMAIN].pop(entry.entry_id)
+
+    _LOGGER.debug(f"Unloading RFIDPad for {handler.mqtt_prefix}")
+
+    unloaded = all(
+        await asyncio.gather(
+            *[
+                hass.config_entries.async_forward_entry_unload(entry, platform)
+                for platform in PLATFORMS
+            ]
+        )
+    )
+
+    return unloaded
+
+
 ##async def async_reload_entry(hass: HomeAssistant, entry: ConfigEntry):
 ##    """Reload config entry."""
 ##    await async_unload_entry(hass, entry)
@@ -186,6 +215,31 @@ class RFIDPadHandler:
         self.mqtt_prefix = mqtt_prefix
         self.async_add_devices = {}
         self.devices = {}
+        self.store = Store(hass, STORAGE_VERSION, STORAGE_KEY)
+        self._history = []
+
+    async def async_initialize(self):
+        try:
+            raw_storage = await self.store.async_load()
+            self._history = raw_storage["history"]
+        except:
+            self._history = []
+
+        _LOGGER.debug(f"Initial history: {self._history}")
+
+
+    @callback
+    def _async_schedule_save(self) -> None:
+        """Schedule saving the history and tag data"""
+        self.store.async_delay_save(self._data_to_save, SAVE_DELAY)
+
+    @callback
+    def _data_to_save(self) -> dict:
+        """Return history and tag data store in a file."""
+        return {
+            'history': self._history[-MAX_HISTORY:],
+        }
+
 
     async def start_discovery(self):
         topic_filter = f"{self.mqtt_prefix}/discovery/#"
@@ -210,9 +264,58 @@ class RFIDPadHandler:
             self.devices[pad.id] = pad
             await pad.start()
 
-    async def async_update_status(self, new_status):
-        for device in self.devices.values():
-            await device.async_update_status(new_status)
+    async def async_handle_action(self, action):
+        """ Called by an RFIDPad when a tag has been scanned """
+
+        self._history.append(action.as_dict())
+        _LOGGER.debug(f"Current history: {self._history}")
+        self.hass.bus.fire(HISTORY_UPDATED_EVENT, {})
+        self._async_schedule_save()
+
+        if not action.tag_valid:
+            _LOGGER.warn(f"unknown tag {action.tag} scanned")
+            return
+
+        # Fire event, for use by automations
+        self.hass.bus.fire(TAG_SCANNED_EVENT, {"button": action.button, "tag":
+            action.tag, "name": action.tag_name})
+
+        # Send new status to all boards
+        new_status = STATUS_TRANSITIONS[action.button]
+        if new_status != None:
+            for device in self.devices.values():
+                await device.async_update_status(new_status)
+
+class RFIDAction:
+    def __init__(self, pad, button, tag, timestamp=None):
+        self.pad = pad
+        self.button = button
+        self.tag = tag
+        self.timestamp = timestamp
+        if timestamp is None:
+            self.timestamp = dt_util.now()
+
+        self.allowed_tags = pad.allowed_tags
+
+    @property
+    def tag_valid(self):
+        return self.tag in self.allowed_tags
+
+    @property
+    def tag_name(self):
+        return self.allowed_tags.get(self.tag, "")
+
+    def as_dict(self):
+        return {
+            "pad": self.pad.name,
+            "button": self.button,
+            "tag": self.tag,
+            "tag_name": self.tag_name,
+            "tag_valid": self.tag_valid,
+            "timestamp": dt_util.as_timestamp(self.timestamp),
+            "date": self.timestamp.strftime("%d/%m/%Y %H:%M:%S"),
+        }
+
 
 class RFIDPad:
     def __init__(self, hass, handler, config):
@@ -251,6 +354,7 @@ class RFIDPad:
             self.action_topic = f"{self.base_topic}/{config[DEVICE_CONF_ACTION_TOPIC]}" 
         except:
             self.action_topic = f"{self.base_topic}/{DEFAULT_ACTION_TOPIC}" 
+
         try: 
             self.battery_topic = f"{self.base_topic}/{config[DEVICE_CONF_BATTERY_TOPIC]}" 
         except:
@@ -258,9 +362,8 @@ class RFIDPad:
 
         self.battery_level = None
         self.battery_voltage = None
-        self.last_tag = None
-        self.last_tag_name = None
-        self.last_tag_action = None
+
+        self.last_action = None
 
     async def start(self):
         _LOGGER.info(f"Subscribing to rfidpad action: {self.action_topic}")
@@ -290,22 +393,10 @@ class RFIDPad:
             _LOGGER.info(f"Action message from board does not contain 'button' and 'message' tags: {msg.payload}")
             return
 
-        self.last_tag = tag
+        action = RFIDAction(self, button, tag)
+        self.last_action = action
 
-        if tag in self.allowed_tags:
-            tag_name = self.allowed_tags[tag]
-            self.last_tag_name = tag_name
-            self.last_tag_action = button
-            self.hass.bus.fire("rfidpad.tag_scanned", {"button": button, "tag":
-                tag, "name": tag_name})
-            # Send new status to all boards
-            new_status = STATUS_TRANSITIONS[button]
-            if new_status != None:
-                await self.handler.async_update_status(STATUS_TRANSITIONS[button])
-        else:
-            _LOGGER.warn(f"unknown tag {tag}")
-            self.last_tag_name = None
-            self.last_tag_action = None
+        await self.handler.async_handle_action(action)
 
         await self.last_tag_sensor.async_update_ha_state()
 

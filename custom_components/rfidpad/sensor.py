@@ -108,7 +108,10 @@ class LastTagSensor(Entity):
     @property
     def state(self):
         """Return the state of the sensor."""
-        return self._device.last_tag
+        try:
+            return self._device.last_action.tag
+        except AttributeError:
+            return None
 
     @property
     def should_poll(self):
@@ -120,8 +123,11 @@ class LastTagSensor(Entity):
         """Return the state attributes of the sensor."""
         attr = {}
 
-        attr[ATTR_TAG_NAME] = self._device.last_tag_name
-        attr[ATTR_BUTTON] = self._device.last_tag_action
+        try:
+            attr[ATTR_TAG_NAME] = self._device.last_action.tag_name
+            attr[ATTR_BUTTON] = self._device.last_action.button
+        except AttributeError:
+            pass
 
         return attr
 

@@ -21,6 +21,15 @@ SWITCH = "switch"
 #PLATFORMS = [BINARY_SENSOR, SENSOR, SWITCH]
 PLATFORMS = [SENSOR]
 
+# Storage
+STORAGE_KEY = DOMAIN
+STORAGE_VERSION = 1
+
+SAVE_DELAY = 10
+MAX_HISTORY = 99
+
+HISTORY_UPDATED_EVENT = "{}.history_updated".format(DOMAIN)
+TAG_SCANNED_EVENT = "{}.tag_scanned".format(DOMAIN)
 
 # Configuration and options
 CONF_MQTT_PREFIX = "mqtt_prefix"
