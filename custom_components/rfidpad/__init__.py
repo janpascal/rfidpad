@@ -59,8 +59,6 @@ from .const import (
 from .config_flow import RFIDPadConfigFlow
 from .sensor import BatterySensor, LastTagSensor
 
-SCAN_INTERVAL = timedelta(seconds=30)
-
 _LOGGER = logging.getLogger(__name__)
 
 TAG_SCHEMA = vol.All(cv.string, cv.matches_regex(r'([0-9a-fA-F][0-9a-fA-F]){1,}'))
@@ -103,26 +101,9 @@ async def async_setup(hass: HomeAssistant, config: Config):
 
     hass.data[DOMAIN][CONF_TAGS] = tag_dict
 
-   # Register websocket API
-    websocket_api.async_register_command(hass, ws_tag_history)
-
     # Return boolean to indicate that initialization was successfully.
     return True
 
-
-@websocket_api.websocket_command({
-    vol.Required('type'): 'rfidpad/tag_history',
-})
-def ws_tag_history(hass: HomeAssistantType,
-                   connection: websocket_api.ActiveConnection, msg):
-    """History of usage of user code tags."""
-    manager = hass.data[DOMAIN]  # type: RFIDPadHandler
-    connection.send_result(msg['id'], {
-        'history': list(reversed(manager._history)),
-    })
-    
-
-    return True
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
     """Set up this integration using UI."""

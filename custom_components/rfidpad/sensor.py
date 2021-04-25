@@ -4,7 +4,7 @@ import logging
 from homeassistant.const import ATTR_VOLTAGE, DEVICE_CLASS_BATTERY, PERCENTAGE
 from homeassistant.helpers.entity import Entity
 
-from .const import DOMAIN, SENSOR, PLATFORMS, ATTR_TAG_NAME, ATTR_BUTTON
+from .const import DOMAIN, SENSOR, PLATFORMS, ATTR_TAG_NAME, ATTR_BUTTON, ATTR_HISTORY
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -124,9 +124,11 @@ class LastTagSensor(Entity):
         attr = {}
 
         try:
+            attr[ATTR_HISTORY] = list(reversed(self._device.handler._history))
             attr[ATTR_TAG_NAME] = self._device.last_action.tag_name
             attr[ATTR_BUTTON] = self._device.last_action.button
         except AttributeError:
+            # In case last_action is None
             pass
 
         return attr

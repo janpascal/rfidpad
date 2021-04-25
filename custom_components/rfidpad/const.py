@@ -55,6 +55,7 @@ STATUS_TRANSITIONS = {
 
 ATTR_TAG_NAME = "tag_name"
 ATTR_BUTTON = "button"
+ATTR_HISTORY = "history"
 
 # Defaults
 DEFAULT_NAME = DOMAIN
