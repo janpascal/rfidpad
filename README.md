@@ -26,6 +26,9 @@ And if possible also:
 - Power usage. The PN532 board has an LED that burns as long as the board is powered. That means the Vcc of the PN532 will need to be switched using e.g. a FET to prevent the board from using too much power during the deep sleep period. Also, the deep sleep mode of the PN532 chip isn't supported by the library supplied by Elechouse.
 - Housing, including the pushbutton and status LEDs.
 
+# Enclosure
+The enclosure is designed with FreeCad. It contains of three parts which should be 3D printable.
+
 # Firmware
 Use the Arduino IDE to compile the firmware. Select the ESP32 dev board as the
 target. Upload it to your RFIDPad
